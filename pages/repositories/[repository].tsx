@@ -4,7 +4,7 @@ const Repository = () => {
     return (
         <div>
             <Header />
-            <h1>You're in!</h1>
+            <h1>You&apos;re in!</h1>
         </div>
     )
 }
