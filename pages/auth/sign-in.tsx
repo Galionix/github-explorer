@@ -1,8 +1,13 @@
 import React, { useState } from "react"
 import { useTokenStore } from './../../utils/useTokenStore';
+import { useRouter } from 'next/dist/client/router';
+
+
 
 export default function SignIn() {
 
+
+    const router = useRouter()
     const setTokenInStore =
         useTokenStore((state) => state.setToken);
 
@@ -13,7 +18,7 @@ export default function SignIn() {
     }
     const handleSave = (event: React.MouseEvent<HTMLElement>) => {
         setTokenInStore(token)
-        // alert(token)
+        router.replace('/')
     }
     return (
         <div
