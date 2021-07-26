@@ -6,8 +6,15 @@ import { AppProps } from 'next/app';
 import { InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect } from 'react';
+import {
+  ApolloClient,
+  InMemoryCache,
+  gql,
+} from '@apollo/client'
 
-const API_URL: string = 'https://jsonplaceholder.typicode.com/posts'
+
+
+const API_URL: string = 'https://api.github.com/graphql'
 
 export default function Home(data: InferGetStaticPropsType<typeof getStaticProps>) {
   // console.log("%c 💆‍♂️: Home -> data ",
@@ -17,12 +24,23 @@ export default function Home(data: InferGetStaticPropsType<typeof getStaticProps
 
   const token =
     useTokenStore((state) => state.token);
-
+  const setTokenInStore =
+    useTokenStore((state) => state.setToken);
+  const signOut = (event: React.MouseEvent<HTMLElement>) => {
+    setTokenInStore('')
+    router.push('/auth/sign-in')
+  }
 
 
   useEffect(() => {
     if (router && token === '')
       router.push('/auth/sign-in')
+    else {
+      const client = new ApolloClient({
+        uri: API_URL,
+        cache: new InMemoryCache(),
+      })
+    }
     return () => {
 
     }
@@ -43,6 +61,9 @@ export default function Home(data: InferGetStaticPropsType<typeof getStaticProps
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
         <h1>{token || 'No token set.'}</h1>
+        <button type="reset"
+          onClick={signOut}
+        >Sign Out</button>
       </main>
       <footer  >
 
