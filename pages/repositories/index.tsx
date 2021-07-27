@@ -62,8 +62,7 @@ export default function Repositories() {
     const authLink = setContext((_, { headers }) => {
 
         // get the authentication token from local storage if it exists
-        // @ts-expect-error: Let's ignore a compile error like this unreachable code 
-        const token = session?.user?.accessToken;
+        const token = user.accessToken;
         // return the headers to the context so httpLink can read them
         return {
             headers: {
