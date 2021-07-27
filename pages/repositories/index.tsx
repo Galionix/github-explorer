@@ -88,7 +88,7 @@ export default function Repositories() {
         columns: Column<{}>[]
         // any props that come into the component
     }
-    function Table({ columns, data }: TableProps) {
+    function Table({ columns, data }: TableProps): React.ReactElement {
         // Use the state and functions returned from useTable to build your UI
         const {
             getTableProps,
@@ -100,29 +100,41 @@ export default function Repositories() {
             columns,
             data,
         })
+        console.log("%c 😭: Repositories -> headerGroups ", "font-size:16px;background-color:#a2254a;color:white;", headerGroups)
 
         // Render the UI for your table
         return (
             <table {...getTableProps()}>
                 <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps()}>{
+                    {headerGroups.map((headerGroup, i) => (
+                        <tr
+                            {...headerGroup.getHeaderGroupProps()}
+                            key={i + 'header'}
+                        >
+                            {headerGroup.headers.map((column, j) => (
+                                <th {...column.getHeaderProps()}
+                                    key={j + 'column'}
+                                >{
                                     column.render('Header')}</th>
                             ))}
                         </tr>
                     ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
+                    {rows.map((row, k) => {
                         // console.log("%c 📪: row ", "font-size:16px;background-color:#27f7d3;color:black;", row)
                         prepareRow(row)
                         return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map(cell => {
+                            <tr
+
+                                {...row.getRowProps()}
+                                key={k + 'row'}
+                            >
+                                {row.cells.map((cell, l) => {
                                     return <td
-                                        {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        {...cell.getCellProps()}
+                                        key={l + '_cell'}
+                                    >{cell.render('Cell')}</td>
                                 })}
                             </tr>
                         )
