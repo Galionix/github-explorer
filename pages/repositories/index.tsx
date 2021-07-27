@@ -15,24 +15,24 @@ export default function Repositories() {
 
     const [session, loading] = useSession()
 
-    const REPOS_QUERY = gql`
-  query user(login: "${session?.user?.login}") {
-    repositories(first: 10) {
-      nodes {
-        name
-        updatedAt
-        createdAt
-        url
-        diskUsage
-        stargazerCount
-      }
-      pageInfo {
-        endCursor
-        startCursor
-      }
-    }
-  }
-`;
+//     const REPOS_QUERY = gql`
+//   query user(login: "${session?.user?.login}") {
+//     repositories(first: 10) {
+//       nodes {
+//         name
+//         updatedAt
+//         createdAt
+//         url
+//         diskUsage
+//         stargazerCount
+//       }
+//       pageInfo {
+//         endCursor
+//         startCursor
+//       }
+//     }
+//   }
+// `;
 
     const httpLink = createHttpLink({
         uri: API_URL,
@@ -61,7 +61,7 @@ export default function Repositories() {
             					query Query {
 	
 
-                        user(login: "${session?.user?.login}) {
+                        user: user(login: "${session?.user?.login}") {
                             repositories(first: 10) {
                             nodes {
                                 name
@@ -85,7 +85,8 @@ export default function Repositories() {
         console.log("%c 👷‍♀️: repos ", "font-size:16px;background-color:#2dcaa3;color:white;", repos)
         return repos
     }
-    get_repos()
+    session?.user?.login && get_repos()
+
     useEffect(() => {
 
         return () => {
