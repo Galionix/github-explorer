@@ -128,11 +128,11 @@ export default NextAuth({
 			profile,
 			isNewUser
 		) {
-			console.log(
-				'%c 🧞‍♂️: //redirect -> profile ',
-				'font-size:16px;background-color:#9d586e;color:white;',
-				profile
-			)
+			// console.log(
+			// 	'%c 🧞‍♂️: //redirect -> profile ',
+			// 	'font-size:16px;background-color:#9d586e;color:white;',
+			// 	profile
+			// )
 			// Add access_token to the token right after signin
 			if (account?.accessToken) {
 				token.accessToken = account.accessToken
