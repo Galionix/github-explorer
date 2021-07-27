@@ -1,12 +1,14 @@
 import Head from 'next/head'
 import Image from 'next/image'
 // import { useTokenStore } from '';
-import { useTokenStore } from './../utils/useTokenStore';
+// import { useTokenStore } from '../utils/useUserStore';
 import { AppProps } from 'next/app';
 import { InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect } from 'react';
 import Header from './../src/components/Header/Header';
+import { useSession } from 'next-auth/client';
+import { useUserStore } from './../utils/useUserStore';
 
 
 export default function Home(data: any) {
@@ -15,15 +17,19 @@ export default function Home(data: any) {
     data)
   const router = useRouter()
 
-  const token =
-    useTokenStore((state) => state.token);
-  const setTokenInStore =
-    useTokenStore((state) => state.setToken);
-  const signOut = (event: React.MouseEvent<HTMLElement>) => {
-    setTokenInStore('')
-    // router.push('/auth/sign-in')
-  }
+  // const token =
+  //   useTokenStore((state) => state.token);
+  // const setTokenInStore =
+  //   useTokenStore((state) => state.setToken);
+  // const signOut = (event: React.MouseEvent<HTMLElement>) => {
+  //   setTokenInStore('')
+  //   // router.push('/auth/sign-in')
+  // }
 
+  const [session, loading] = useSession();
+  const user =
+    useUserStore((state) => state.user);
+  console.log("%c 🇫🇷: Home -> user ", "font-size:16px;background-color:#73ca34;color:white;", user)
 
   useEffect(() => {
     // if (router && token === '')
@@ -50,11 +56,18 @@ export default function Home(data: any) {
       </Head>
       <Header />
       <main  >
-        <h1  >
-          Hello, user! Welcome to github-explorer!
+        {!session && <h1  >
+          Hello, user! Please sign-in to browse.
         </h1>
+
+        }
+        {session && <h1  >
+          {`Hello, ${session.user?.name}!`}
+        </h1>
+
+        }
         {/* <h1>{token || 'No token set.'}</h1> */}
-        {
+        {/* {
           token && <>
             <p>Welcome back!</p>
             <button
@@ -74,7 +87,7 @@ export default function Home(data: any) {
 
             >Sign-in</button>
           </>
-        }
+        } */}
 
       </main>
       <footer  >

@@ -11,6 +11,11 @@ import styles from './header.module.css'
 // rendering, and avoids any flash incorrect content on initial page load.
 export default function Header() {
 	const [session, loading] = useSession()
+	console.log(
+		'%c 👗: Header -> session ',
+		'font-size:16px;background-color:#3a75fb;color:white;',
+		session
+	)
 
 	return (
 		<header>
@@ -46,10 +51,10 @@ export default function Header() {
 					)}
 					{session && (
 						<>
-							{session.user.image && (
+							{session.user.picture && (
 								<span
 									style={{
-										backgroundImage: `url(${session.user.image})`,
+										backgroundImage: `url(${session.user.picture})`,
 									}}
 									className={styles.avatar}
 								/>
@@ -61,7 +66,7 @@ export default function Header() {
 								<br />
 								<strong>
 									{session.user.email ||
-										session.user.name}
+										session.user.login}
 								</strong>
 							</span>
 							<a
@@ -85,12 +90,14 @@ export default function Header() {
 							<a>Home</a>
 						</Link>
 					</li>
-					<li className={styles.navItem}>
-						<Link href='/client'>
-							<a>Client</a>
-						</Link>
-					</li>
-					<li className={styles.navItem}>
+					{session && (
+						<li className={styles.navItem}>
+							<Link href='/repositories'>
+								<a>Browse repositories</a>
+							</Link>
+						</li>
+					)}
+					{/* <li className={styles.navItem}>
 						<Link href='/server'>
 							<a>Server</a>
 						</Link>
@@ -104,7 +111,7 @@ export default function Header() {
 						<Link href='/api-example'>
 							<a>API</a>
 						</Link>
-					</li>
+					</li> */}
 				</ul>
 			</nav>
 		</header>

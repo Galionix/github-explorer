@@ -19,6 +19,6 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "utils/useTokenStore.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "utils/useUserStore.ts"],
   "exclude": ["node_modules"]
 }

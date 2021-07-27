@@ -31,7 +31,8 @@ export default NextAuth({
 			clientId: process.env.GITHUB_ID,
 			clientSecret: process.env.GITHUB_SECRET,
 			// https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
-			scope: 'read:user',
+			scope:
+				'read:user public_repo repo repo_deployment repo:status read:repo_hook read:org read:public_key read:gpg_key',
 		}),
 		// Providers.Google({
 		// 	clientId: process.env.GOOGLE_ID,
@@ -106,10 +107,42 @@ export default NextAuth({
 	// when an action is performed.
 	// https://next-auth.js.org/configuration/callbacks
 	callbacks: {
-		// async signIn(user, account, profile) { return true },
+		async signIn(user, account, profile) {
+			return true
+		},
 		// async redirect(url, baseUrl) { return baseUrl },
-		// async session(session, user) { return session },
-		// async jwt(token, user, account, profile, isNewUser) { return token }
+		async session(session, user) {
+			// console.log(
+			// 	'%c 🏊‍♂️: session -> user ',
+			// 	'font-size:16px;background-color:#f3dd09;color:black;',
+			// 	user
+			// )
+			// session,
+			// session.accessToken = account.accessToken
+			return { user }
+		},
+		async jwt(
+			token,
+			user,
+			account,
+			profile,
+			isNewUser
+		) {
+			console.log(
+				'%c 🧞‍♂️: //redirect -> profile ',
+				'font-size:16px;background-color:#9d586e;color:white;',
+				profile
+			)
+			// Add access_token to the token right after signin
+			if (account?.accessToken) {
+				token.accessToken = account.accessToken
+			}
+			if (profile?.login) {
+				token.login = profile.login
+			}
+
+			return token
+		},
 	},
 
 	// Events are useful for logging
@@ -118,7 +151,7 @@ export default NextAuth({
 
 	// You can set the theme to 'light', 'dark' or use 'auto' to default to the
 	// whatever prefers-color-scheme is set to in the browser. Default is 'auto'
-	theme: 'light',
+	theme: 'auto',
 
 	// Enable debug messages in the console if you are having problems
 	debug: true,

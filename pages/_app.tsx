@@ -1,8 +1,23 @@
 // import '../styles/globals.css'
 import { Provider } from 'next-auth/client'
 import type { AppProps } from 'next/app'
+import { useSession } from 'next-auth/client';
+import { useEffect } from 'react';
+import { useUserStore } from './../utils/useUserStore';
 
 function MyApp({ Component, pageProps }: AppProps) {
+
+  const [session, loading] = useSession()
+  // const user =
+  //   useUserStore((state) => state.user);
+  const setUser =
+    useUserStore((state) => state.setUser);
+  // if (session) 
+  useEffect(() => {
+    session && setUser(session.user)
+
+  }, [session])
+
   return <Provider
     // Provider options are not required but can be useful in situations where
     // you have a short session maxAge time. Shown here with default values.

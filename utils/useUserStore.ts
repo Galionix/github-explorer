@@ -2,15 +2,15 @@ import create from 'zustand'
 import { persist } from 'zustand/middleware'
 
 type StoreState = {
-	token: string
-	setToken: (token: string) => void
+	user: any
+	setUser: (user: any) => void
 }
 
-export const useTokenStore = create<StoreState>(
+export const useUserStore = create<StoreState>(
 	persist(
 		set => ({
-			token: '',
-			setToken: token => set({ token }),
+			user: null,
+			setUser: user => set({ user }),
 		}),
 		{
 			name: 'user-storage',
