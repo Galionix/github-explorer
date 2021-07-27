@@ -33,7 +33,7 @@ export default function Repositories() {
     const [session, loading] = useSession()
 
     // @ts-expect-error: Let's ignore a compile error like this unreachable code 
-    const user: AuthenticatedUser = session!.user!
+    const user: AuthenticatedUser = session.user!
 
     //     const REPOS_QUERY = gql`
     //   query user(login: "${session?.user?.login}") {
