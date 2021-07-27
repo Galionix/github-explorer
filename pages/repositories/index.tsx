@@ -6,7 +6,7 @@ import {
     createHttpLink,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { DefaultSession } from 'next-auth';
 import { useState } from 'react';
 import Header from './../../src/components/Header/Header';
@@ -83,12 +83,25 @@ export default function Repositories() {
         url: string
         // any props that come into the component
     }
+    const renderRowSubComponent = useCallback(
+        ({ row }) => (
+            <pre
+                style={{
+                    fontSize: '10px',
+                }}
+            >
+                <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+            </pre>
+        ),
+        []
+    )
     interface TableProps {
         data: any
         columns: Column<{}>[]
+        renderRowSubComponent: any
         // any props that come into the component
     }
-    function Table({ columns, data }: TableProps): React.ReactElement {
+    function Table({ columns, data, renderRowSubComponent }: TableProps): React.ReactElement {
         // Use the state and functions returned from useTable to build your UI
         const {
             getTableProps,
@@ -100,7 +113,7 @@ export default function Repositories() {
             columns,
             data,
         })
-        console.log("%c 😭: Repositories -> headerGroups ", "font-size:16px;background-color:#a2254a;color:white;", headerGroups)
+        // console.log("%c 😭: Repositories -> headerGroups ", "font-size:16px;background-color:#a2254a;color:white;", headerGroups)
 
         // Render the UI for your table
         return (
@@ -131,6 +144,35 @@ export default function Repositories() {
                                 key={k + 'row'}
                             >
                                 {row.cells.map((cell, l) => {
+
+
+                                    if (cell.column.id === 'createdAt') {
+                                        return (<td
+                                            {...cell.getCellProps()}
+                                            key={l + '_cell'}
+                                        >
+                                            <span>{new Date(cell.value).toLocaleDateString()}</span>
+
+                                        </td>
+                                        )
+                                    }
+
+                                    if (cell.column.id === 'stargazerCount') {
+
+                                        // console.log("%c 🆘: Repositories -> cell ",
+                                        //     "font-size:16px;background-color:#f2ec2b;color:black;",
+                                        //     cell)
+                                        return (<td
+                                            {...cell.getCellProps()}
+                                            key={l + '_cell'}
+                                        >
+                                            <span>{cell.value}</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                            </svg>
+                                        </td>
+                                        )
+                                    }
                                     return <td
                                         {...cell.getCellProps()}
                                         key={l + '_cell'}
@@ -216,35 +258,49 @@ export default function Repositories() {
 
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
-    useEffect(() => {
+    const [pageInfo, setPageInfo] = useState({ endCursor: '', startCursor: '', hasNextPage: false, hasPreviousPage: false, __typename: "PageInfo" })
+    const [generalData, setGeneralData] = useState<any>({
+        totalCount: 0,
+        totalDiskUsage: 0
+    })
+
+    const [page, setPage] = useState(0)
+    const nextPage = () => {
 
         if (user?.login)
             client.query({
                 query: gql`
             query Query {
                         user: user(login: "${user.login}") {
-                            repositories(first: 10) {
-                            nodes {
-                                name
-                                updatedAt
-                                createdAt
-                                url
-                                diskUsage
-                                stargazerCount
-                            }
-                            pageInfo {
-                                endCursor
-                                startCursor
-                            }
+                            repositories(first: 5, after: "${pageInfo.startCursor}" ) {
+     pageInfo {
+          endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+      totalDiskUsage
+      nodes {
+        name
+        updatedAt
+        createdAt
+        url
+        diskUsage
+        stargazerCount
+      }
                             }
                         }
-						
+
 					}
-   
+
 				`,
             }).then(response => {
+
                 console.log("%c 🇸🇩: response ",
-                    "font-size:16px;background-color:#087199;color:white;", response.data.user.repositories.nodes)
+                    "font-size:16px;background-color:#087199;color:white;",
+                    response)
+
                 const prepared = response.data.user.repositories.nodes.map((repo: RepoData) => {
                     return {
                         ...repo,
@@ -252,7 +308,117 @@ export default function Repositories() {
                         diskUsage: formatBytes(repo.diskUsage),
                     }
                 })
+                setPageInfo(response.data.user.repositories.pageInfo)
                 setRepos(prepared)
+                setGeneralData({
+                    totalCount: response.data.user.repositories.totalCount,
+                    totalDiskUsage: response.data.user.repositories.totalDiskUsage
+                })
+            })
+
+    }
+    const prevPage = () => {
+
+        if (user?.login)
+            client.query({
+                query: gql`
+            query Query {
+                        user: user(login: "${user.login}") {
+                            repositories(last: 5,before: "${pageInfo.endCursor}"  ) {
+     pageInfo {
+          endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+      totalDiskUsage
+      nodes {
+        name
+        updatedAt
+        createdAt
+        url
+        diskUsage
+        stargazerCount
+      }
+                            }
+                        }
+
+					}
+
+				`,
+            }).then(response => {
+
+                console.log("%c 🇸🇩: response ",
+                    "font-size:16px;background-color:#087199;color:white;",
+                    response)
+
+                const prepared = response.data.user.repositories.nodes.map((repo: RepoData) => {
+                    return {
+                        ...repo,
+                        updatedAt: timeAgo.format(new Date(repo.updatedAt)),
+                        diskUsage: formatBytes(repo.diskUsage),
+                    }
+                })
+                setPageInfo(response.data.user.repositories.pageInfo)
+                setRepos(prepared)
+                setGeneralData({
+                    totalCount: response.data.user.repositories.totalCount,
+                    totalDiskUsage: response.data.user.repositories.totalDiskUsage
+                })
+            })
+
+    }
+
+    useEffect(() => {
+
+        if (user?.login)
+            client.query({
+                query: gql`
+            query Query {
+                        user: user(login: "${user.login}") {
+                            repositories(last: 5 ) {
+     pageInfo {
+          endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+      totalDiskUsage
+      nodes {
+        name
+        updatedAt
+        createdAt
+        url
+        diskUsage
+        stargazerCount
+      }
+                            }
+                        }
+						
+					}
+   
+				`,
+            }).then(response => {
+
+                console.log("%c 🇸🇩: response ",
+                    "font-size:16px;background-color:#087199;color:white;",
+                    response)
+
+                const prepared = response.data.user.repositories.nodes.map((repo: RepoData) => {
+                    return {
+                        ...repo,
+                        updatedAt: timeAgo.format(new Date(repo.updatedAt)),
+                        diskUsage: formatBytes(repo.diskUsage),
+                    }
+                })
+                setPageInfo(response.data.user.repositories.pageInfo)
+                setRepos(prepared)
+                setGeneralData({
+                    totalCount: response.data.user.repositories.totalCount,
+                    totalDiskUsage: response.data.user.repositories.totalDiskUsage
+                })
             })
 
         // console.log("%c 🇲🇪: anyNameFunction -> repos ",
@@ -288,7 +454,31 @@ export default function Repositories() {
             <Header />
             {
                 repos && <>
-                    <Table columns={columns} data={data} />
+                    <Table columns={columns} data={data}
+                        renderRowSubComponent={renderRowSubComponent}
+                    />
+                    <div>
+                        <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)}`}</p>
+                        <p>{`Total count: ${generalData.totalCount}`}</p>
+                    </div>
+                    <button
+                        disabled={!pageInfo.hasNextPage}
+                        onClick={() => {
+                            nextPage();
+                            setPage((page) => page - 1)
+
+                        }}
+                    >Next page</button>
+                    <p>Current page : {page}</p>
+                    <button
+                        disabled={!pageInfo.hasPreviousPage}
+                        onClick={() => {
+                            prevPage()
+                            setPage((page) => page + 1)
+
+                        }}
+                    >Previous page</button>
+                    <pre>{JSON.stringify(pageInfo, null, 2)}</pre>
                 </>
             }
         </div>
