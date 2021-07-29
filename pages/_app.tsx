@@ -1,24 +1,113 @@
+import { getSession, useSession } from 'next-auth/client';
 // import '../styles/globals.css'
-import { Provider } from 'next-auth/client'
+import { Provider as AuthProvider } from 'next-auth/client'
 import type { AppProps } from 'next/app'
-import { useSession } from 'next-auth/client';
 import { useEffect } from 'react';
 import { useUserStore } from './../utils/useUserStore';
+import {
+  ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  NormalizedCacheObject,
+  ApolloConsumer
+} from '@apollo/client'
+
+import { setContext } from '@apollo/client/link/context';
+import { DefaultSession } from 'next-auth';
+import { useState } from 'react';
+import { Session } from '@/ts/interfaces';
+
+
+
 
 function MyApp({ Component, pageProps }: AppProps) {
 
-  const [session, loading] = useSession()
-  // const user =
-  //   useUserStore((state) => state.user);
+
+  // type AuthenticatedUser = {
+  //   // user: {
+  //   login: string
+  //   name?: string
+  //   picture?: string
+  //   accessToken?: string
+  //   // }
+  // }
+
+
+
+
+
+  const userStore =
+    useUserStore((state) => state.user);
   const setUser =
     useUserStore((state) => state.setUser);
   // if (session) 
+
+  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | any>(null)
+
+
   useEffect(() => {
-    session && setUser(session.user)
 
-  }, [session])
 
-  return <Provider
+
+
+    // const [session, loading]
+    //   : [session: Session | null, loading: boolean | null] = useSession()
+    // console.log("%c 🕵️‍♂️: MyApp -> session ",
+    //   "font-size:16px;background-color:#871f01;color:white;",
+    //   session)
+
+    if (userStore) {
+
+
+
+
+      const httpLink = createHttpLink({
+        uri: 'https://api.github.com/graphql',
+      });
+
+      const authLink = setContext((_, { headers }) => {
+        // const user = session?.user!
+        // if (!user) return
+        // get the authentication token from local storage if it exists
+        const token = userStore.accessToken;
+        // console.log("%c ⬇️: authLink -> token ",
+        //   "font-size:16px;background-color:#cc9bd1;color:white;", token)
+        // return the headers to the context so httpLink can read them
+        return {
+          headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : "",
+          }
+        }
+      });
+
+
+
+      setClient(
+        new ApolloClient({
+          link: authLink.concat(httpLink),
+          cache: new InMemoryCache()
+        })
+
+      )
+    }
+  }, [userStore])
+
+  useEffect(() => {
+    (async () => {
+      const session = await getSession()
+      setUser(session?.user)
+      console.log("%c 🇵🇱: MyApp -> session ",
+        "font-size:16px;background-color:#76ce59;color:white;", session)
+    })()
+    // console.log("%c 🥛: client ", "font-size:16px;background-color:#2baa13;color:white;", client)
+
+  }, [])
+
+
+
+  return <AuthProvider
     // Provider options are not required but can be useful in situations where
     // you have a short session maxAge time. Shown here with default values.
     options={{
@@ -37,7 +126,17 @@ function MyApp({ Component, pageProps }: AppProps) {
       keepAlive: 0
     }}
     session={pageProps.session} >
-    <Component {...pageProps} />
-  </Provider>
+    <ApolloProvider
+      client={client || {}}
+    >
+
+      {/* {client && <p>client got!</p>} */}
+
+
+
+      <Component {...pageProps} client={client} />
+
+    </ApolloProvider>
+  </AuthProvider>
 }
 export default MyApp

@@ -5,18 +5,31 @@ import {
 	useSession,
 } from 'next-auth/client'
 import styles from './header.module.css'
+import { useUserStore } from './../../../utils/useUserStore'
 
 // The approach used in this component shows how to built a sign in and sign out
 // component that works on pages which support both client and server side
 // rendering, and avoids any flash incorrect content on initial page load.
 export default function Header() {
-	const [session, loading] = useSession()
-	console.log(
-		'%c 👗: Header -> session ',
-		'font-size:16px;background-color:#3a75fb;color:white;',
-		session
+	// const [session, loading] = useSession()
+	// console.log(
+	// 	'%c 👗: Header -> session ',
+	// 	'font-size:16px;background-color:#3a75fb;color:white;',
+	// 	session
+	// )
+	const userStore = useUserStore(
+		state => state.user
+	)
+	const setUser = useUserStore(
+		state => state.setUser
 	)
 
+	const sessionLoading = useUserStore(
+		state => state.sessionLoading
+	)
+	const setSessionLoading = useUserStore(
+		state => state.setSessionLoading
+	)
 	return (
 		<header>
 			<noscript>
@@ -25,36 +38,26 @@ export default function Header() {
 			<div className={styles.signedInStatus}>
 				<p
 					className={`nojs-show ${
-						!session && loading
+						!userStore && sessionLoading
 							? styles.loading
 							: styles.loaded
 					}`}
 				>
-					{!session && (
+					{!userStore && (
 						<>
 							<span
 								className={styles.notSignedInText}
 							>
 								You are not signed in
 							</span>
-							<a
-								href={`/api/auth/signin`}
-								className={styles.buttonPrimary}
-								onClick={e => {
-									e.preventDefault()
-									signIn()
-								}}
-							>
-								Sign in
-							</a>
 						</>
 					)}
-					{session && (
+					{userStore && (
 						<>
-							{session.user.picture && (
+							{userStore.picture && (
 								<span
 									style={{
-										backgroundImage: `url(${session.user.picture})`,
+										backgroundImage: `url(${userStore.picture})`,
 									}}
 									className={styles.avatar}
 								/>
@@ -64,17 +67,18 @@ export default function Header() {
 							>
 								<small>Signed in as</small>
 								<br />
-								<strong>
-									{session.user.email ||
-										session.user.login}
-								</strong>
+								<strong>{userStore.login}</strong>
 							</span>
 							<a
 								href={`/api/auth/signout`}
 								className={styles.button}
 								onClick={e => {
+									setSessionLoading(true)
 									e.preventDefault()
-									signOut()
+									signOut().then(res => {
+										setUser(null)
+										setSessionLoading(false)
+									})
 								}}
 							>
 								Sign out
@@ -90,7 +94,7 @@ export default function Header() {
 							<a>Home</a>
 						</Link>
 					</li>
-					{session && (
+					{userStore && (
 						<li className={styles.navItem}>
 							<Link href='/repositories'>
 								<a>Browse repositories</a>
