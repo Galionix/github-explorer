@@ -58,8 +58,10 @@ export default function Home(data: any) {
       </Head>
       {/* <Header /> */}
       <main >        {user ? <div>
-        <img
+        <Image
+
           width={100}
+          height={100}
           src={user.picture} alt="" />
         <h1  >
           {`Hello, ${user.name}!`}

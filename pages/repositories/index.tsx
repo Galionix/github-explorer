@@ -121,12 +121,12 @@ export default function Repositories(
         // debounce(() => {
 
 
-        if (client && ownerFliter.login)
+        if (client && ownerFliter.login && user)
             download({ client, login: ownerFliter.login })
         // }, 2000
         // )
 
-    }, [client, ownerFliter.login])
+    }, [client, ownerFliter?.login])
 
     const download = useCallback(
         debounce(({ client, login }) => {

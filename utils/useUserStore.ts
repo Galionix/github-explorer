@@ -1,4 +1,4 @@
-import { StoreState } from '@/ts/types'
+import { StoreState } from '@/ts/interfaces'
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
 
