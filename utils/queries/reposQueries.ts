@@ -66,7 +66,6 @@ export const FIRST_PROJECTS = gql`
 
 export const NO_LOGIN = gql`
 	${NODE_DATA}
-	${PAGE_INFO}
 	query GetRepos(
 		# $login: String!
 		$pageSize: Int!
@@ -77,7 +76,7 @@ export const NO_LOGIN = gql`
 		search(
 			query: $repoName
 			type: REPOSITORY
-			first: $pageSiz
+			first: $pageSize
 		) {
 			repositoryCount
 			edges {
@@ -87,7 +86,12 @@ export const NO_LOGIN = gql`
 					}
 				}
 			}
-			...pageInfo
+			pageInfo {
+				endCursor
+				hasNextPage
+				hasPreviousPage
+				startCursor
+			}
 		}
 	}
 `

@@ -126,3 +126,48 @@ export interface RootObject {
 export interface Error {
 	message: string
 }
+
+export module NoLogin {
+	export interface Owner {
+		login: string
+		avatarUrl: string
+	}
+
+	export interface Node {
+		diskUsage: number
+		id: string
+		name: string
+		openGraphImageUrl: string
+		owner: Owner
+		description: string
+		url: string
+		createdAt: Date
+		updatedAt: Date
+		stargazerCount: number
+	}
+
+	export interface Edge {
+		node: Node
+	}
+
+	export interface PageInfo {
+		endCursor: string
+		hasNextPage: boolean
+		hasPreviousPage: boolean
+		startCursor: string
+	}
+
+	export interface Search {
+		repositoryCount: number
+		edges: Edge[]
+		pageInfo: PageInfo
+	}
+
+	export interface Data {
+		search: Search
+	}
+
+	export interface RootObject {
+		data: Data
+	}
+}

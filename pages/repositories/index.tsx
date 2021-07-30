@@ -23,10 +23,10 @@ import en from 'javascript-time-ago/locale/en'
 
 // import { formatBytes } from 'utils/utils';
 import {
-    FIRST_PROJECTS,
+    FIRST_PROJECTS, NO_LOGIN,
     // PREV_PROJECTS
 } from './../../utils/queries/reposQueries';
-import { Owner, RootObject, Session } from 'ts/interfaces';
+import { NoLogin, Owner, RootObject, Session } from 'ts/interfaces';
 
 import { Table } from '../../src/components/Table/Table';
 import { SignButton } from '@/components/SignButton/SignButton';
@@ -130,6 +130,7 @@ export default function Repositories(
 
         return repo
     }
+
     const setRepoData = ({ res: {
 
         data:
@@ -149,7 +150,7 @@ export default function Repositories(
                         nodes: Node[],
                         pageInfo: PageInfo
                     }, repository: Node
-                    }
+                }
             },
         }, repoNameSearch: string
     }) => {
@@ -168,28 +169,86 @@ export default function Repositories(
                 })
             }
         }
-        else
-        setRepos(nodes)
+        else {
+            // nodes.map(console.log)
+            setRepos(nodes)
+        }
 
         setError('')
         setPageInfo(pageInfo)
     }
+
+
+    const setNoLoginRepoData = ({ res: {
+
+        data:
+        {
+            search: {
+                repositoryCount,
+                edges
+
+            }
+        }
+    }, repoNameSearch }: { res: NoLogin.RootObject, repoNameSearch: string }) => {
+        // if (repoNameSearch !== '') {
+        if (repositoryCount > 0) {
+            // edges.map(item => console.log(item.node))
+
+            setRepos(edges.map(item => item.node))
+        }
+        else {
+            setRepos([])
+            setError('no repo found')
+            setPageInfo({
+                endCursor: '',
+                startCursor: '',
+                hasNextPage: false,
+                hasPreviousPage: false,
+
+            })
+        }
+        // }
+        // else
+        //     setRepos(nodes)
+
+        // setError('')
+        // setPageInfo(pageInfo)
+    }
+
     const data = useMemo(() => repos, [repos])
     const [error, setError] = useState('')
     useEffect(() => {
         // debounce(() => {
         setLoading(true)
 
-        if (client && user)
-            download({
+        if (client && user) {
+
+            if (ownerFilter !== '') {
+                // console.log('owner search')
+
+                download({
                 client,
 
                 ownerFilter,
                 pageSize,
                 orderDirection,
                 sortingField,
-                repoNameSearch
-            })
+                    repoNameSearch
+                })
+            }
+            else {
+                // console.log('global search')
+
+                downloadRepo({
+                    client,
+                    // ownerFilter,
+                    pageSize,
+                    // orderDirection,
+                    // sortingField,
+                    repoNameSearch
+                })
+            }
+        }
         // }, 2000
         // )
 
@@ -232,11 +291,70 @@ export default function Repositories(
                 setLoading(false)
                 if (res.data.repositoryOwner) {
 
-                    console.log("%c 🦕: res ",
-                        "font-size:16px;background-color:#8cfea6;color:black;",
-                        res)
+                    // console.log("%c 🦕: res ",
+                    //     "font-size:16px;background-color:#8cfea6;color:black;",
+                    //     res)
 
                     setRepoData({ res, repoNameSearch })
+                }
+                else {
+                    setRepos([])
+
+                    setError('No repos found')
+                    setPageInfo({
+                        endCursor: '',
+                        startCursor: '',
+                        hasNextPage: false,
+                        hasPreviousPage: false,
+
+                    })
+
+                }
+            }).catch((e: Error) => {
+                setRepos([])
+                setError(e.message)
+                setLoading(false)
+            })
+        }, 200),
+        []
+    );
+    const downloadRepo = useCallback(
+        debounce(({
+            client,
+            // ownerFilter,
+            pageSize,
+            // orderDirection,
+            // sortingField,
+            repoNameSearch
+        }) => {
+            // console.log(
+            //     pageSize,
+            //     // orderDirection,
+            //     // sortingField,
+            //     repoNameSearch
+
+            // )
+            client.query({
+                query: NO_LOGIN,
+                variables: {
+                    // login: ownerFilter,
+                    pageSize,
+                    // orderDirection,
+                    // field: sortingField,
+                    repoName: repoNameSearch
+
+                }
+            }).then((res: NoLogin.RootObject) => {
+                // console.log("%c 🙀: res ",
+                //     "font-size:16px;background-color:#7a1421;color:white;",
+                //     res)
+
+                setLoading(false)
+                if (res.data.search.repositoryCount > 0) {
+
+
+
+                    setNoLoginRepoData({ res, repoNameSearch })
                 }
                 else {
                     setRepos([])
@@ -293,7 +411,7 @@ export default function Repositories(
             <select
                 key='select_pageSize'
                 name="" id=""
-                disabled={loading || repoNameSearch !== ''}
+                disabled={loading || (repoNameSearch !== '' && ownerFilter !== '')}
                 value={pageSize}
                 onChange={(e) => {
                     // setPage(1)
