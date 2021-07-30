@@ -1,24 +1,22 @@
 import { gql } from '@apollo/client'
 
 const NODE_DATA = gql`
-	fragment nodeData on RepositoryConnection {
-		nodes {
-			diskUsage
-			id
-			name
-			openGraphImageUrl
-			owner {
-				login
-				avatarUrl
-			}
-			description
-			url
-			createdAt
-			updatedAt
-			stargazerCount
+	fragment nodeData on Repository {
+		# nodes {
+		diskUsage
+		id
+		name
+		openGraphImageUrl
+		owner {
+			login
+			avatarUrl
 		}
-		totalCount
-		totalDiskUsage
+		description
+		url
+		createdAt
+		updatedAt
+		stargazerCount
+		# }
 	}
 `
 const PAGE_INFO = gql`
@@ -40,6 +38,7 @@ export const FIRST_PROJECTS = gql`
 		$pageSize: Int!
 		$orderDirection: OrderDirection!
 		$field: RepositoryOrderField!
+		$repoName: String!
 	) {
 		repositoryOwner(
 			login: $login # pageSize: $pageSize # endCursor: $endCursor
@@ -51,12 +50,44 @@ export const FIRST_PROJECTS = gql`
 					direction: $orderDirection
 				}
 			) {
-				# nodes {
-				...nodeData
-				# }
-
+				nodes {
+					...nodeData
+				}
+				totalCount
+				totalDiskUsage
 				...pageInfo
 			}
+			repository(name: $repoName) {
+				...nodeData
+			}
+		}
+	}
+`
+
+export const NO_LOGIN = gql`
+	${NODE_DATA}
+	${PAGE_INFO}
+	query GetRepos(
+		# $login: String!
+		$pageSize: Int!
+		# $orderDirection: OrderDirection!
+		# $field: RepositoryOrderField!
+		$repoName: String!
+	) {
+		search(
+			query: $repoName
+			type: REPOSITORY
+			first: $pageSiz
+		) {
+			repositoryCount
+			edges {
+				node {
+					... on Repository {
+						...nodeData
+					}
+				}
+			}
+			...pageInfo
 		}
 	}
 `

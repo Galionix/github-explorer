@@ -52,11 +52,19 @@ export type StoreState = {
 		sessionLoading: boolean
 	) => void
 	pageSize: number
-	setPageSize: (pageSize: any) => void
+	setPageSize: (pageSize: number) => void
 	orderDirection: string
-	setOrderDirection: (orderDirection: any) => void
+	setOrderDirection: (
+		orderDirection: string
+	) => void
 	sortingField: string
-	setSortingField: (setSortingField: any) => void
+	setSortingField: (
+		setSortingField: string
+	) => void
+	repoNameSearch: string
+	setRepoNameSearch: (
+		repoNameSearch: string
+	) => void
 }
 
 // export interface PageInfo {
@@ -104,6 +112,7 @@ export interface RepositoryOwner {
 	id: string
 	login: string
 	repositories: Repositories
+	repository: Node
 }
 
 export interface Data {

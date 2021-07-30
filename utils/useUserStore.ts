@@ -23,6 +23,10 @@ export const useUserStore = create<StoreState>(
 			ownerFilter: '',
 			setOwnerFilter: (ownerFilter: string) =>
 				set({ ownerFilter }),
+			repoNameSearch: '',
+			setRepoNameSearch: (
+				repoNameSearch: string
+			) => set({ repoNameSearch }),
 		}),
 		{
 			name: 'user-storage',

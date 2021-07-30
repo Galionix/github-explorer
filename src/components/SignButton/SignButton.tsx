@@ -28,7 +28,8 @@ export const SignButton = () => {
         setPageSize,
         setOrderDirection,
         setSortingField,
-        setOwnerFilter
+        setOwnerFilter,
+        setRepoNameSearch
     } = useUserStore(
         (state) => ({
             // user: state.user,
@@ -39,7 +40,8 @@ export const SignButton = () => {
             setPageSize: state.setPageSize,
             setOrderDirection: state.setOrderDirection,
             setSortingField: state.setSortingField,
-            setOwnerFilter: state.setOwnerFilter
+            setOwnerFilter: state.setOwnerFilter,
+            setRepoNameSearch: state.setRepoNameSearch,
         }), shallow);
     // console.log("%c 😚: SignButton -> userStore ", "font-size:16px;background-color:#570d39;color:white;", userStore)
 
@@ -79,6 +81,7 @@ export const SignButton = () => {
                             setOrderDirection("ASC"),
                             setSortingField("STARGAZERS"),
                             setOwnerFilter('')
+                        setRepoNameSearch('')
                     })
                 }}
             >

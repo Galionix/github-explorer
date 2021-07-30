@@ -76,10 +76,11 @@ export default function Repositories(
         orderDirection,
         sortingField,
         ownerFilter,
+        repoNameSearch,
         setPageSize,
         setOrderDirection,
         setSortingField,
-        setOwnerFilter
+        setOwnerFilter, setRepoNameSearch
     } = useUserStore(
         (state) => ({
             user: state.user,
@@ -87,10 +88,12 @@ export default function Repositories(
             orderDirection: state.orderDirection,
             sortingField: state.sortingField,
             ownerFilter: state.ownerFilter,
+            repoNameSearch: state.repoNameSearch,
             setPageSize: state.setPageSize,
             setOrderDirection: state.setOrderDirection,
             setSortingField: state.setSortingField,
-            setOwnerFilter: state.setOwnerFilter
+            setOwnerFilter: state.setOwnerFilter,
+            setRepoNameSearch: state.setRepoNameSearch
         }), shallow);
     // const user =
     //     useUserStore((state) => state.user);
@@ -127,25 +130,45 @@ export default function Repositories(
 
         return repo
     }
-    const setRepoData = ({
+    const setRepoData = ({ res: {
+
         data:
         {
             repositoryOwner: {
                 repositories:
-                { nodes, pageInfo }
+                { nodes, pageInfo },
+                repository
             }
-        } }: {
+        }
+    }, repoNameSearch }: {
+        res: {
             data: {
                 repositoryOwner:
                 {
                     repositories: {
                         nodes: Node[],
                         pageInfo: PageInfo
+                    }, repository: Node
                     }
-                }
-            }
-        }) => {
+            },
+        }, repoNameSearch: string
+    }) => {
+        if (repoNameSearch !== '') {
+            if (repository)
+                setRepos([repository])
+            else {
+                setRepos([])
+                setError('no repo found')
+                setPageInfo({
+                    endCursor: '',
+                    startCursor: '',
+                    hasNextPage: false,
+                    hasPreviousPage: false,
 
+                })
+            }
+        }
+        else
         setRepos(nodes)
 
         setError('')
@@ -164,7 +187,8 @@ export default function Repositories(
                 ownerFilter,
                 pageSize,
                 orderDirection,
-                sortingField
+                sortingField,
+                repoNameSearch
             })
         // }, 2000
         // )
@@ -175,7 +199,8 @@ export default function Repositories(
         user,
         pageSize,
         orderDirection,
-        sortingField
+        sortingField,
+        repoNameSearch
     ])
 
     const download = useCallback(
@@ -184,7 +209,7 @@ export default function Repositories(
             ownerFilter,
             pageSize,
             orderDirection,
-            sortingField
+            sortingField, repoNameSearch
         }) => {
             // console.log(
             //     login,
@@ -199,17 +224,19 @@ export default function Repositories(
                     login: ownerFilter,
                     pageSize,
                     orderDirection,
-                    field: sortingField
+                    field: sortingField,
+                    repoName: repoNameSearch
 
                 }
             }).then((res: RootObject) => {
                 setLoading(false)
                 if (res.data.repositoryOwner) {
 
-                    // console.log("%c 🦕: res ",
-                    //     "font-size:16px;background-color:#8cfea6;color:black;", res)
+                    console.log("%c 🦕: res ",
+                        "font-size:16px;background-color:#8cfea6;color:black;",
+                        res)
 
-                    setRepoData(res)
+                    setRepoData({ res, repoNameSearch })
                 }
                 else {
                     setRepos([])
@@ -241,81 +268,84 @@ export default function Repositories(
                 ownerFilter,
                 pageSize,
                 orderDirection,
-                sortingField
+                sortingField,
+                repoNameSearch
             }, null, 2)}</pre>
             {error && <p>{error}</p>}
+            <input
+                type="text"
+                value={ownerFilter}
+                placeholder='Owner'
+                onChange={
+                    e => {
 
-            {repos && user ? <>
-                <input
-                    type="text"
-                    value={ownerFilter}
-                    placeholder='Owner'
-                    onChange={
-                        e => {
+                        setOwnerFilter(e.target.value)
 
-                            setOwnerFilter(e.target.value)
-
-                        }
                     }
-                />
-                <input
-                    type="text"
-                    placeholder='Repo name'
-                />
-                <select
-                    key='select_pageSize'
-                    name="" id=""
-                    disabled={loading}
-                    value={pageSize}
-                    onChange={(e) => {
-                        // setPage(1)
-                        setPageSize(parseInt(e.target.value))
-                    }}
-                >
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
+                }
+            />
+            <input
+                type="text"
+                placeholder='Repo name'
+                value={repoNameSearch}
+                onChange={(e) => { setRepoNameSearch(e.target.value) }}
+            />
+            <select
+                key='select_pageSize'
+                name="" id=""
+                disabled={loading || repoNameSearch !== ''}
+                value={pageSize}
+                onChange={(e) => {
+                    // setPage(1)
+                    setPageSize(parseInt(e.target.value))
+                }}
+            >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
 
 
-                </select>
-                <select name="" id=""
-                    key='select_sortingField'
+            </select>
+            <select name="" id=""
+                key='select_sortingField'
 
-                    value={sortingField}
-                    disabled={loading}
-                    onChange={(e) => {
-                        // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
+                value={sortingField}
+                disabled={loading || repoNameSearch !== ''}
+                onChange={(e) => {
+                    // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
 
-                        setSortingField(e.target.value)
-                    }}
-                >
-                    <option value="STARGAZERS">STARGAZERS</option>
-                    <option value="CREATED_AT">CREATED_AT</option>
-                    <option value="UPDATED_AT">UPDATED_AT</option>
-                    <option value="PUSHED_AT">PUSHED_AT</option>
-                    <option value="NAME">NAME</option>
-
-
-                </select>
-                <select name="" id=""
-                    key='select_orderDirection'
-
-                    value={orderDirection}
-                    disabled={loading}
-                    onChange={(e) => {
-                        setOrderDirection(e.target.value)
-                        // setPage(1)
-                        // setPageSize(parseInt(e.target.value))
-                    }}
-                >
-                    <option value="ASC">ASC</option>
-                    <option value="DESC">DESC</option>
+                    setSortingField(e.target.value)
+                }}
+            >
+                <option value="STARGAZERS">STARGAZERS</option>
+                <option value="CREATED_AT">CREATED_AT</option>
+                <option value="UPDATED_AT">UPDATED_AT</option>
+                <option value="PUSHED_AT">PUSHED_AT</option>
+                <option value="NAME">NAME</option>
 
 
+            </select>
+            <select name="" id=""
+                key='select_orderDirection'
 
-                </select>
+                value={orderDirection}
+                disabled={loading || repoNameSearch !== ''}
+                onChange={(e) => {
+                    setOrderDirection(e.target.value)
+                    // setPage(1)
+                    // setPageSize(parseInt(e.target.value))
+                }}
+            >
+                <option value="ASC">ASC</option>
+                <option value="DESC">DESC</option>
+
+
+
+            </select>
+            {repos && user ? <>
+
                 <Table
                     data={data}
                     loading={loading}
