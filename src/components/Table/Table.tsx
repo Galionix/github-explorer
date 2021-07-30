@@ -4,7 +4,14 @@ import { useMemo } from 'react';
 import { Column, TableInstance, useTable } from 'react-table'
 import { StarButton } from './StarButton';
 import { Node } from './../../../ts/interfaces';
+import TimeAgo from 'javascript-time-ago'
 
+
+import en from 'javascript-time-ago/locale/en'
+import { formatBytes } from 'utils/utils';
+
+TimeAgo.addDefaultLocale(en)
+const timeAgo = new TimeAgo('en-US')
 
 
 
@@ -87,8 +94,30 @@ export const Table = ({ data, loading }: TableProps) => {
                             key={k + 'row'}
                         >
                             {row.cells.map((cell, l) => {
+                                console.log("%c 🇱🇻: Table -> cell ", "font-size:16px;background-color:#bc5d4d;color:white;", cell)
+                                if (cell.column.id === 'diskUsage') {
+                                    return (<td
+                                        {...cell.getCellProps()}
+                                        key={l + '_cell'}
+                                    >
+                                        <span>{formatBytes(cell.value)}</span>
 
+                                    </td>
+                                    )
+                                }
 
+                                if (cell.column.id === 'updatedAt') {
+                                    return (<td
+                                        {...cell.getCellProps()}
+                                        key={l + '_cell'}
+                                    >
+                                        <span>{timeAgo.format(new Date(cell.value))}</span>
+
+                                    </td>
+                                    )
+                                }
+                                // updatedAt: timeAgo.format(new Date(repo.updatedAt)),
+                                //     diskUsage: formatBytes(repo.diskUsage),
                                 if (cell.column.id === 'createdAt') {
                                     return (<td
                                         {...cell.getCellProps()}

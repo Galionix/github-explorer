@@ -14,10 +14,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useState } from 'react';
 // import Header from '@/components/Header/Header';
 
-import TimeAgo from 'javascript-time-ago'
 
-
-import en from 'javascript-time-ago/locale/en'
 // import { throttle } from 'lodash'
 
 
@@ -36,9 +33,6 @@ import { Node } from './../../ts/interfaces';
 import { debounce } from 'lodash';
 import { Error } from './../../ts/interfaces';
 
-
-TimeAgo.addDefaultLocale(en)
-const timeAgo = new TimeAgo('en-US')
 
 
 
@@ -224,7 +218,7 @@ export default function Repositories(
         if (client && user) {
 
             if (ownerFilter !== '') {
-                // console.log('owner search')
+                console.log('owner search')
 
                 download({
                 client,
@@ -237,7 +231,7 @@ export default function Repositories(
                 })
             }
             else {
-                // console.log('global search')
+                console.log('global search')
 
                 downloadRepo({
                     client,
