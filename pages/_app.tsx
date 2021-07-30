@@ -98,8 +98,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     (async () => {
       const session = await getSession()
       setUser(session?.user)
-      console.log("%c 🇵🇱: MyApp -> session ",
-        "font-size:16px;background-color:#76ce59;color:white;", session)
+      // console.log("%c 🇵🇱: MyApp -> session ",
+      //   "font-size:16px;background-color:#76ce59;color:white;", session)
     })()
     // console.log("%c 🥛: client ", "font-size:16px;background-color:#2baa13;color:white;", client)
 

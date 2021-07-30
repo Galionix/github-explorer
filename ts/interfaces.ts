@@ -39,13 +39,24 @@ export type StarButtonProps = {
 // 	// any props that come into the component
 // }
 
+
+ 
+
 export type StoreState = {
 	user: any
 	setUser: (user: any) => void
+	ownerFilter: string
+	setOwnerFilter: (ownerFilter: string) => void
 	sessionLoading: boolean
 	setSessionLoading: (
 		sessionLoading: boolean
 	) => void
+	pageSize: number
+	setPageSize: (pageSize: any) => void
+	orderDirection: string
+	setOrderDirection: (orderDirection: any) => void
+	sortingField: string
+	setSortingField: (setSortingField: any) => void
 }
 
 // export interface PageInfo {

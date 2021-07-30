@@ -10,6 +10,19 @@ export const useUserStore = create<StoreState>(
 			sessionLoading: false,
 			setSessionLoading: sessionLoading =>
 				set({ sessionLoading }),
+			pageSize: 5,
+			setPageSize: (pageSize: number) =>
+				set({ pageSize }),
+			orderDirection: 'ASC',
+			setOrderDirection: (
+				orderDirection: string
+			) => set({ orderDirection }),
+			sortingField: 'STARGAZERS',
+			setSortingField: (sortingField: string) =>
+				set({ sortingField }),
+			ownerFilter: '',
+			setOwnerFilter: (ownerFilter: string) =>
+				set({ ownerFilter }),
 		}),
 		{
 			name: 'user-storage',

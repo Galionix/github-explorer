@@ -1,9 +1,45 @@
 import { gql } from '@apollo/client'
 
+const NODE_DATA = gql`
+	fragment nodeData on RepositoryConnection {
+		nodes {
+			diskUsage
+			id
+			name
+			openGraphImageUrl
+			owner {
+				login
+				avatarUrl
+			}
+			description
+			url
+			createdAt
+			updatedAt
+			stargazerCount
+		}
+		totalCount
+		totalDiskUsage
+	}
+`
+const PAGE_INFO = gql`
+	fragment pageInfo on RepositoryConnection {
+		pageInfo {
+			endCursor
+			hasNextPage
+			hasPreviousPage
+			startCursor
+		}
+	}
+`
+
 export const FIRST_PROJECTS = gql`
+	${NODE_DATA}
+	${PAGE_INFO}
 	query GetRepos(
 		$login: String!
 		$pageSize: Int!
+		$orderDirection: OrderDirection!
+		$field: RepositoryOrderField!
 	) {
 		repositoryOwner(
 			login: $login # pageSize: $pageSize # endCursor: $endCursor
@@ -11,33 +47,15 @@ export const FIRST_PROJECTS = gql`
 			repositories(
 				first: $pageSize
 				orderBy: {
-					field: CREATED_AT
-					direction: DESC
+					field: $field
+					direction: $orderDirection
 				}
 			) {
-				nodes {
-					diskUsage
-					id
-					name
-					openGraphImageUrl
-					owner {
-						login
-						avatarUrl
-					}
-					description
-					url
-					createdAt
-					updatedAt
-					stargazerCount
-				}
-				totalCount
-				totalDiskUsage
-				pageInfo {
-					endCursor
-					hasNextPage
-					hasPreviousPage
-					startCursor
-				}
+				# nodes {
+				...nodeData
+				# }
+
+				...pageInfo
 			}
 		}
 	}

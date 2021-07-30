@@ -1,6 +1,7 @@
 
 import { signIn, signOut } from 'next-auth/client';
 import { useUserStore } from 'utils/useUserStore';
+import shallow from 'zustand/shallow';
 
 export const SignButton = () => {
 
@@ -18,7 +19,28 @@ export const SignButton = () => {
     const setSessionLoading = useUserStore(
         state => state.setSessionLoading
     )
-
+    const {
+        // user,
+        // pageSize,
+        // orderDirection,
+        // sortingField,
+        // ownerFilter,
+        setPageSize,
+        setOrderDirection,
+        setSortingField,
+        setOwnerFilter
+    } = useUserStore(
+        (state) => ({
+            // user: state.user,
+            // pageSize: state.pageSize,
+            // orderDirection: state.orderDirection,
+            // sortingField: state.sortingField,
+            // ownerFilter: state.ownerFilter,
+            setPageSize: state.setPageSize,
+            setOrderDirection: state.setOrderDirection,
+            setSortingField: state.setSortingField,
+            setOwnerFilter: state.setOwnerFilter
+        }), shallow);
     // console.log("%c 😚: SignButton -> userStore ", "font-size:16px;background-color:#570d39;color:white;", userStore)
 
 
@@ -53,6 +75,10 @@ export const SignButton = () => {
                     signOut().then(res => {
                         setUser(null)
                         setSessionLoading(false)
+                        setPageSize(5),
+                            setOrderDirection("ASC"),
+                            setSortingField("STARGAZERS"),
+                            setOwnerFilter('')
                     })
                 }}
             >
