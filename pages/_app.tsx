@@ -34,14 +34,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   // }
 
 
-
-
-
   const userStore =
     useUserStore((state) => state.user);
   const setUser =
     useUserStore((state) => state.setUser);
+  const setOwnerFilter =
+    useUserStore((state) => state.setOwnerFilter);
+
   // if (session) 
+
+  // useEffect(() => {
+
+    // if (!loading)
+    //   if (session?.user)
+  //   setOwnerFilter(session?.user?.login)
+  // }, [session?.user?.login])
+
 
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | any>(null)
 
@@ -96,8 +104,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     (async () => {
-      const session = await getSession()
+      const session: any = await getSession()
       setUser(session?.user)
+
       // console.log("%c 🇵🇱: MyApp -> session ",
       //   "font-size:16px;background-color:#76ce59;color:white;", session)
     })()

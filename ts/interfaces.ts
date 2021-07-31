@@ -39,14 +39,11 @@ export type StarButtonProps = {
 // 	// any props that come into the component
 // }
 
-
- 
-
 export type StoreState = {
 	user: any
 	setUser: (user: any) => void
 	ownerFilter: string
-	setOwnerFilter: (ownerFilter: string) => void
+	setOwnerFilter: (ownerFilter: any) => void
 	sessionLoading: boolean
 	setSessionLoading: (
 		sessionLoading: boolean

@@ -95,7 +95,114 @@ export const NO_LOGIN = gql`
 		}
 	}
 `
+export const SEARCH_NEXT = gql`
+	${NODE_DATA}
+	${PAGE_INFO}
+	query GetRepos(
+		$login: String!
+		$pageSize: Int!
+		$orderDirection: OrderDirection!
+		$field: RepositoryOrderField!
+		$repoName: String!
+		$after: String
+	) {
+		repositoryOwner(
+			login: $login # pageSize: $pageSize # endCursor: $endCursor
+		) {
+			repositories(
+				first: $pageSize
+				after: $after
+				orderBy: {
+					field: $field
+					direction: $orderDirection
+				}
+			) {
+				nodes {
+					...nodeData
+				}
+				totalCount
+				totalDiskUsage
+				...pageInfo
+			}
+			repository(name: $repoName) {
+				...nodeData
+			}
+		}
+	}
+`
 
+export const SEARCH_PREV = gql`
+	${NODE_DATA}
+	${PAGE_INFO}
+	query GetRepos(
+		$login: String!
+		$pageSize: Int!
+		$orderDirection: OrderDirection!
+		$field: RepositoryOrderField!
+		$repoName: String!
+		# $last: Int!,
+		$before: String # $after: String
+	) {
+		repositoryOwner(
+			login: $login # pageSize: $pageSize # endCursor: $endCursor
+		) {
+			repositories(
+				last: $pageSize
+				before: $before
+				# first: $pageSize
+				# after: $after
+				orderBy: {
+					field: $field
+					direction: $orderDirection
+				}
+			) {
+				nodes {
+					...nodeData
+				}
+				totalCount
+				totalDiskUsage
+				...pageInfo
+			}
+			repository(name: $repoName) {
+				...nodeData
+			}
+		}
+	}
+`
+
+export const NO_LOGIN_NEXT = gql`
+	${NODE_DATA}
+	query GetRepos(
+		# $login: String!
+		$pageSize: Int!
+		# $orderDirection: OrderDirection!
+		# $field: RepositoryOrderField!
+		$repoName: String!
+		$after: String
+	) {
+		search(
+			query: $repoName
+			type: REPOSITORY
+			first: $pageSize
+			after: $after
+		) {
+			repositoryCount
+			edges {
+				node {
+					... on Repository {
+						...nodeData
+					}
+				}
+			}
+			pageInfo {
+				endCursor
+				hasNextPage
+				hasPreviousPage
+				startCursor
+			}
+		}
+	}
+`
 // export const PREV_PROJECTS = {
 // 	query: gql`
 //             query Query {

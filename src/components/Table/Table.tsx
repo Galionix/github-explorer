@@ -6,9 +6,10 @@ import { StarButton } from './StarButton';
 import { Node } from './../../../ts/interfaces';
 import TimeAgo from 'javascript-time-ago'
 
-
+import s from './table.module.scss'
 import en from 'javascript-time-ago/locale/en'
 import { formatBytes } from 'utils/utils';
+import Image from 'next/image';
 
 TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-US')
@@ -25,6 +26,10 @@ export const Table = ({ data, loading }: TableProps) => {
             {
                 Header: 'Repos',
                 columns: [
+                    {
+                        Header: 'Owner',
+                        accessor: 'owner',
+                    },
                     {
                         Header: 'Repo Name',
                         accessor: 'name',
@@ -63,6 +68,7 @@ export const Table = ({ data, loading }: TableProps) => {
         columns,
         data,
     })
+    // console.log("%c 🎱: Table -> data ", "font-size:16px;background-color:#926c45;color:white;", data)
     // console.log("%c 😭: Repositories -> headerGroups ", "font-size:16px;background-color:#a2254a;color:white;", headerGroups)
 
     // Render the UI for your table
@@ -85,7 +91,7 @@ export const Table = ({ data, loading }: TableProps) => {
             </thead>
             <tbody {...getTableBodyProps()}>
                 {rows.map((row, k) => {
-                    // console.log("%c 📪: row ", "font-size:16px;background-color:#27f7d3;color:black;", row)
+                    console.log("%c 📪: row ", "font-size:16px;background-color:#27f7d3;color:black;", row)
                     prepareRow(row)
                     return (
                         <tr
@@ -94,7 +100,25 @@ export const Table = ({ data, loading }: TableProps) => {
                             key={k + 'row'}
                         >
                             {row.cells.map((cell, l) => {
-                                console.log("%c 🇱🇻: Table -> cell ", "font-size:16px;background-color:#bc5d4d;color:white;", cell)
+                                if (cell.column.id === 'owner') {
+                                    console.log("%c 🍫: Table -> cell ", "font-size:16px;background-color:#73c829;color:white;", cell.value)
+
+                                    return (<td
+                                        {...cell.getCellProps()}
+                                        key={l + '_cell'}
+                                    >
+                                        <Image
+
+                                            className={s.avatar}
+                                            width={70}
+                                            height={70}
+                                            src={cell.value.avatarUrl}
+                                        />
+                                        <span>{cell.value.login}</span>
+
+                                    </td>
+                                    )
+                                }
                                 if (cell.column.id === 'diskUsage') {
                                     return (<td
                                         {...cell.getCellProps()}

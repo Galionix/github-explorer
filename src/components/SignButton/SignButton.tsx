@@ -1,10 +1,9 @@
 
-import { signIn, signOut } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/client';
 import { useUserStore } from 'utils/useUserStore';
 import shallow from 'zustand/shallow';
 
 export const SignButton = () => {
-
 
     const userStore = useUserStore(
         state => state.user
@@ -12,6 +11,7 @@ export const SignButton = () => {
     const setUser = useUserStore(
         state => state.setUser
     )
+    // const [session, loading]: [session: any, loading: boolean] = useSession();
 
     const sessionLoading = useUserStore(
         state => state.sessionLoading
@@ -55,7 +55,7 @@ export const SignButton = () => {
                 onClick={e => {
                     setSessionLoading(true)
                     e.preventDefault()
-                    signIn().then(
+                    signIn('github').then(
                         // alert(res)
                         // console.log(
                         //     '%c 🧛‍♂️: Header -> res ',
@@ -63,7 +63,20 @@ export const SignButton = () => {
                         //     res
                         // )
                         // setUser(null)
-                        () => setSessionLoading(false)
+                        (msg) => {
+                            // console.log("%c 🔥: SignButton -> msg ",
+                            //     "font-size:16px;background-color:#1a8d28;color:white;", msg)
+
+                            // console.log("%c 8️⃣: SignButton -> msg ",
+                            //     "font-size:16px;background-color:#e95ebd;color:white;", msg)
+                            // if (session?.user)
+                            //     setOwnerFilter(session?.user?.login)
+                            setSessionLoading(false)
+                            // console.log("%c 👯‍♂️: MyApp -> session?.user?.login ",
+                            //     "font-size:16px;background-color:#da9feb;color:white;",
+                            //     session?.user?.login)
+
+                        }
                     )
                 }}
             >
@@ -74,7 +87,7 @@ export const SignButton = () => {
                 onClick={e => {
                     setSessionLoading(true)
                     e.preventDefault()
-                    signOut().then(res => {
+                        signOut({ redirect: false }).then(res => {
                         setUser(null)
                         setSessionLoading(false)
                         setPageSize(5),
