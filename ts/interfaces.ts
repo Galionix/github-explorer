@@ -20,12 +20,15 @@ export interface TableProps {
 	// columns: Column<RepoData>[]
 
 	loading: boolean
+	// setLoading: Function
 	// any props that come into the component
 }
 export type StarButtonProps = {
 	value: number
 	id: string
 	globalLoading: boolean
+	starred: boolean
+	// setLoading: Function
 }
 
 // export type RepoData = {
@@ -89,6 +92,7 @@ export interface Node {
 	createdAt: Date
 	updatedAt: Date
 	stargazerCount: number
+	viewerHasStarred: boolean
 }
 
 export interface PageInfo {
@@ -141,6 +145,7 @@ export module NoLogin {
 		createdAt: Date
 		updatedAt: Date
 		stargazerCount: number
+		viewerHasStarred: boolean
 	}
 
 	export interface Edge {
@@ -168,3 +173,24 @@ export module NoLogin {
 		data: Data
 	}
 }
+
+declare module Star {
+	export interface Starrable {
+		viewerHasStarred: boolean
+		stargazerCount: number
+	}
+
+	export interface RemoveStar {
+		starrable: Starrable
+	}
+
+	export interface Data {
+		__typename: string
+		removeStar: RemoveStar
+	}
+
+	export interface RootObject {
+		data: Data
+	}
+}
+

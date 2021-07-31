@@ -13,7 +13,7 @@ export const useUserStore = create<StoreState>(
 			pageSize: 5,
 			setPageSize: (pageSize: number) =>
 				set({ pageSize }),
-			orderDirection: 'ASC',
+			orderDirection: 'DESC',
 			setOrderDirection: (
 				orderDirection: string
 			) => set({ orderDirection }),

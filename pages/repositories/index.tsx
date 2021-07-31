@@ -27,6 +27,7 @@ import {
     FIRST_PROJECTS,
     NO_LOGIN,
     NO_LOGIN_NEXT,
+    NO_LOGIN_PREV,
     SEARCH_PREV,
 	// PREV_PROJECTS
 } from './../../utils/queries/reposQueries'
@@ -45,6 +46,7 @@ import { Node } from './../../ts/interfaces'
 import { debounce } from 'lodash'
 import { Error } from './../../ts/interfaces'
 import { SEARCH_NEXT } from './../../utils/queries/reposQueries'
+import { formatBytes } from './../../utils/utils';
 
 export default function Repositories({
     client,
@@ -112,10 +114,10 @@ export default function Repositories({
 
     const [repos, setRepos] = useState<Node[]>([])
 
-	// const [generalData, setGeneralData] = useState<any>({
-	//     totalCount: 0,
-	//     totalDiskUsage: 0
-	// })
+    const [generalData, setGeneralData] = useState<any>({
+        totalCount: 0,
+        totalDiskUsage: 0
+    })
 
     const [page, setPage] = useState(1)
     const handleDownloadError = (e: Error) => {
@@ -132,7 +134,7 @@ export default function Repositories({
     const nextPage = (
         e: SyntheticEvent<HTMLButtonElement>
     ) => {
-
+        setLoading(true)
         if (!globalSearch) {
             client
                 .query({
@@ -147,6 +149,7 @@ export default function Repositories({
                     },
                 })
                 .then((res: RootObject) => {
+                    setPage(page => page + 1)
                     setLoading(false)
                     if (res.data.repositoryOwner) {
                         setRepoData({ res, repoNameSearch })
@@ -157,7 +160,7 @@ export default function Repositories({
                         setError('No repos found')
                     }
                 })
-                .catch(handleDownloadError)
+                .catch(handleDownloadError).finally(() => setLoading(false))
         }
         else {
             client
@@ -173,6 +176,7 @@ export default function Repositories({
                     },
                 })
                 .then((res: NoLogin.RootObject) => {
+                    setPage(page => page + 1)
                     setLoading(false)
                     if (res.data.search.repositoryCount > 0) {
                         setNoLoginRepoData({
@@ -186,11 +190,11 @@ export default function Repositories({
                         // setError('No repos found')
                     }
                 })
-                .catch(handleDownloadError)
+                .catch(handleDownloadError).finally(() => setLoading(false))
         }
     }
     const prevPage = (e: SyntheticEvent<HTMLButtonElement>) => {
-
+        setLoading(true)
         if (!globalSearch) {
             client
                 .query({
@@ -205,6 +209,7 @@ export default function Repositories({
                     },
                 })
                 .then((res: RootObject) => {
+                    setPage(page => page - 1)
                     setLoading(false)
                     if (res.data.repositoryOwner) {
                         setRepoData({ res, repoNameSearch })
@@ -215,7 +220,38 @@ export default function Repositories({
                         setError('No repos found')
                     }
                 })
-                .catch(handleDownloadError)
+                .catch(handleDownloadError).finally(() => setLoading(false))
+        }
+        else {
+            client
+                .query({
+                    query: NO_LOGIN_PREV,
+                    variables: {
+                        // login: ownerFilter,
+                        pageSize,
+                        // orderDirection,
+                        // field: sortingField,
+                        repoName: repoNameSearch,
+                        before: pageInfo.startCursor,
+                    },
+                })
+                .then((res: NoLogin.RootObject) => {
+                    setPage(page => page - 1)
+                    setLoading(false)
+                    if (res.data.search.repositoryCount > 0) {
+                        setNoLoginRepoData({
+                            res,
+                            repoNameSearch,
+                        })
+                    } else {
+                        handleDownloadError({
+                            message: 'No repos found',
+                        })
+                        // setError('No repos found')
+                    }
+                })
+                .catch(handleDownloadError).finally(() => setLoading(false))
+
         }
     }
 
@@ -230,7 +266,7 @@ export default function Repositories({
         res: {
             data: {
                 repositoryOwner: {
-                    repositories: { nodes, pageInfo },
+                    repositories: { nodes, pageInfo, totalCount, totalDiskUsage },
                     repository,
                 },
             },
@@ -243,6 +279,8 @@ export default function Repositories({
                     repositories: {
                         nodes: Node[]
                         pageInfo: PageInfo
+                        totalCount: number
+                        totalDiskUsage: number
                     }
                     repository: Node
                 }
@@ -251,15 +289,20 @@ export default function Repositories({
             repoNameSearch: string
     }) => {
         if (repoNameSearch !== '') {
-            if (repository) setRepos([repository])
+            if (repository) {
+                setRepos([repository])
+                setGeneralData({ totalCount: 1, totalDiskUsage: repository.diskUsage })
+            }
             else handleDownloadError({ message: 'no repo found' })
         } else {
             // nodes.map(console.log)
             setRepos(nodes)
+            setGeneralData({ totalCount, totalDiskUsage })
         }
 
         setError('')
         setPageInfo(pageInfo)
+
     }
 
     const setNoLoginRepoData = ({
@@ -276,6 +319,10 @@ export default function Repositories({
         // if (repoNameSearch !== '') {
         if (repositoryCount > 0) {
 			// edges.map(item => console.log(item.node))
+            setGeneralData({
+                totalCount: repositoryCount,
+                totalDiskUsage: Infinity
+            })
             setPageInfo(pageInfo)
             setRepos(edges.map(item => item.node))
         } else {
@@ -370,6 +417,7 @@ export default function Repositories({
                         },
                     })
                     .then((res: RootObject) => {
+                        console.log("%c 👩‍👦‍👦: res ", "font-size:16px;background-color:#2e6946;color:white;", res)
                         setLoading(false)
                         if (res.data.repositoryOwner) {
                             setRepoData({ res, repoNameSearch })
@@ -527,8 +575,8 @@ export default function Repositories({
                     // setPageSize(parseInt(e.target.value))
                 }}
             >
-                <option value='ASC'>ASC</option>
                 <option value='DESC'>DESC</option>
+                <option value='ASC'>ASC</option>
             </select>
             {repos && user ? (
                 <>
@@ -547,9 +595,14 @@ export default function Repositories({
                     Next page
                 </button>
             )}
-
+            <div>
+                {
+                    globalSearch || <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)} (${generalData.totalDiskUsage})`}</p>
+                }
+                <p>{`Total count: ${generalData.totalCount}`}</p>
+            </div>
             <p>Current page : {page}</p>
-            {/* <p>Total pages : {(Math.ceil(generalData.totalCount / pageSize))}</p> */}
+            <p>Total pages : {(Math.ceil(generalData.totalCount / pageSize))}</p>
             {pageInfo.hasPreviousPage &&
                 <button
                     disabled={!pageInfo.hasPreviousPage || loading}

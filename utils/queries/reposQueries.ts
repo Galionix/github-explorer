@@ -16,6 +16,7 @@ const NODE_DATA = gql`
 		createdAt
 		updatedAt
 		stargazerCount
+		viewerHasStarred
 		# }
 	}
 `
@@ -203,6 +204,39 @@ export const NO_LOGIN_NEXT = gql`
 		}
 	}
 `
+export const NO_LOGIN_PREV = gql`
+	${NODE_DATA}
+	query GetRepos(
+		# $login: String!
+		$pageSize: Int!
+		# $orderDirection: OrderDirection!
+		# $field: RepositoryOrderField!
+		$repoName: String!
+		$before: String
+	) {
+		search(
+			query: $repoName
+			type: REPOSITORY
+			last: $pageSize
+			before: $before
+		) {
+			repositoryCount
+			edges {
+				node {
+					... on Repository {
+						...nodeData
+					}
+				}
+			}
+			pageInfo {
+				endCursor
+				hasNextPage
+				hasPreviousPage
+				startCursor
+			}
+		}
+	}
+`
 // export const PREV_PROJECTS = {
 // 	query: gql`
 //             query Query {
@@ -232,3 +266,31 @@ export const NO_LOGIN_NEXT = gql`
 
 // 				`,
 // }
+export const ADD_STAR = gql`
+	mutation AddStar($starrableId: String) {
+		__typename
+		addStar(
+			input: { starrableId: $starrableId }
+		) {
+			clientMutationId
+			starrable {
+				viewerHasStarred
+				stargazerCount
+			}
+		}
+	}
+`
+export const REMOVE_STAR = gql`
+	mutation RemoveStar($starrableId: String) {
+		__typename
+		removeStar(
+			input: { starrableId: $starrableId }
+		) {
+			clientMutationId
+			starrable {
+				viewerHasStarred
+				stargazerCount
+			}
+		}
+	}
+`

@@ -10,7 +10,8 @@ import s from './table.module.scss'
 import en from 'javascript-time-ago/locale/en'
 import { formatBytes } from 'utils/utils';
 import Image from 'next/image';
-
+import Link from 'next/link';
+import { ApolloConsumer } from '@apollo/client';
 TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
@@ -91,7 +92,7 @@ export const Table = ({ data, loading }: TableProps) => {
             </thead>
             <tbody {...getTableBodyProps()}>
                 {rows.map((row, k) => {
-                    console.log("%c 📪: row ", "font-size:16px;background-color:#27f7d3;color:black;", row)
+                    // console.log("%c 📪: row ", "font-size:16px;background-color:#27f7d3;color:black;", row)
                     prepareRow(row)
                     return (
                         <tr
@@ -101,7 +102,7 @@ export const Table = ({ data, loading }: TableProps) => {
                         >
                             {row.cells.map((cell, l) => {
                                 if (cell.column.id === 'owner') {
-                                    console.log("%c 🍫: Table -> cell ", "font-size:16px;background-color:#73c829;color:white;", cell.value)
+                                    // console.log("%c 🍫: Table -> cell ", "font-size:16px;background-color:#73c829;color:white;", cell)
 
                                     return (<td
                                         {...cell.getCellProps()}
@@ -115,7 +116,13 @@ export const Table = ({ data, loading }: TableProps) => {
                                             src={cell.value.avatarUrl}
                                         />
                                         <span>{cell.value.login}</span>
-
+                                        <Link
+                                            href={cell.row.original.url}
+                                        ><a target="_blank" >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                            </a></Link>
                                     </td>
                                     )
                                 }
@@ -162,11 +169,18 @@ export const Table = ({ data, loading }: TableProps) => {
                                         {...cell.getCellProps()}
                                         key={l + '_cell'}
                                     >
+                                        {/* Apollo */}
+                                        {/* <ApolloConsumer> */}
+
                                         <StarButton
+
                                             value={cell.value}
                                             id={cell.row.original.id}
                                             globalLoading={loading}
+                                            starred={cell.row.original.viewerHasStarred}
                                         />
+                                        {/* </ApolloConsumer> */}
+
                                         {/* <button
                                                 disabled={globalLoading}
                                             >
