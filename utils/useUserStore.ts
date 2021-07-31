@@ -27,6 +27,12 @@ export const useUserStore = create<StoreState>(
 			setRepoNameSearch: (
 				repoNameSearch: string
 			) => set({ repoNameSearch }),
+			selectedOwner: '',
+			setSelectedOwner: (selectedOwner: string) =>
+				set({ selectedOwner }),
+			selectedName: '',
+			setSelectedName: (selectedName: string) =>
+				set({ selectedName }),
 		}),
 		{
 			name: 'user-storage',

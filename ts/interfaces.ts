@@ -65,6 +65,12 @@ export type StoreState = {
 	setRepoNameSearch: (
 		repoNameSearch: string
 	) => void
+	selectedOwner: string
+	setSelectedOwner: (
+		selectedOwner: string
+	) => void
+	selectedName: string
+	setSelectedName: (selectedName: string) => void
 }
 
 // export interface PageInfo {
@@ -89,8 +95,8 @@ export interface Node {
 	owner: Owner
 	description: string
 	url: string
-	createdAt: Date
-	updatedAt: Date
+	createdAt: number
+	updatedAt: number
 	stargazerCount: number
 	viewerHasStarred: boolean
 }
@@ -142,8 +148,8 @@ export module NoLogin {
 		owner: Owner
 		description: string
 		url: string
-		createdAt: Date
-		updatedAt: Date
+		createdAt: number
+		updatedAt: number
 		stargazerCount: number
 		viewerHasStarred: boolean
 	}
@@ -193,4 +199,41 @@ declare module Star {
 		data: Data
 	}
 }
+
+// export module RepoDetails {
+// 	export interface Repository extends Node {}
+
+// 	export interface Data {
+// 		__typename: string
+// 		repository: Repository
+// 	}
+
+// 	export interface RootObject {
+// 		data: Data
+// 	}
+// }
+
+export module RepoDetails {
+	export interface Object {
+		text: string
+		commitUrl: string
+	}
+
+	export interface Repository extends Node {
+		id: string
+		description: string
+		descriptionHTML: string
+		object: Object
+	}
+
+	export interface Data {
+		__typename: string
+		repository: Repository
+	}
+
+	export interface RootObject {
+		data: Data
+	}
+}
+
 

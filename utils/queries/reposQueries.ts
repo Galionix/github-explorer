@@ -294,3 +294,19 @@ export const REMOVE_STAR = gql`
 		}
 	}
 `
+export const GET_REPO = gql`
+	${NODE_DATA}
+	query getRepo($name: String!, $owner: String!) {
+		__typename
+		repository(name: $name, owner: $owner) {
+			...nodeData
+			object(expression: "master:README.md") {
+				... on Blob {
+					id
+					text
+					commitUrl
+				}
+			}
+		}
+	}
+`
