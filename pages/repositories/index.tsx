@@ -614,62 +614,6 @@ export default function Repositories({
 
                     }}
                 >Previous page</button>}
-            {/* <Header /> */}
-            {/* {
-                repos && <>
-
-                    <select name="" id=""
-                        disabled={globalLoading}
-                        onChange={(e) => {
-                            setPage(1)
-                            setPageSize(parseInt(e.target.value))
-                        }}
-                    >
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-
-
-                    </select>
-                    <Table columns={columns} data={data}
-
-                        loading={loading}
-                    />
-                    <div>
-                        <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)}`}</p>
-                        <p>{`Total count: ${generalData.totalCount}`}</p>
-                    </div>
-                    <button
-                        disabled={!pageInfo.hasNextPage || globalLoading}
-                        onClick={() => {
-                            if (globalLoading) return
-                            setGlobalLoading(true)
-                            setTimeout(nextPage,
-                                100)
-                            // throttle(
-                            //     )
-
-
-                        }}
-                    >Next page</button>
-                    <p>Current page : {page}</p>
-                    <p>Total pages : {(Math.ceil(generalData.totalCount / pageSize))}</p>
-                    <button
-                        disabled={!pageInfo.hasPreviousPage || globalLoading}
-                        onClick={() => {
-                            if (globalLoading) return
-                            setGlobalLoading(true)
-                            setTimeout(
-                                prevPage, 100)
-
-
-                        }}
-                    >Previous page</button>
-
-                </>
-            } */}
 
             <pre>
                 {JSON.stringify(pageInfo, null, 2)}

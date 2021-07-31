@@ -17,12 +17,12 @@ export const StarButton = ({
     globalLoading,
 }: StarButtonProps) => {
 
-    console.log({
-        starred,
-        value,
-        id: starrableId,
-        globalLoading,
-    })
+    // console.log({
+    //     starred,
+    //     value,
+    //     id: starrableId,
+    //     globalLoading,
+    // })
     const [userStarred, setUserStarred] =
         useState(starred)
     const [count, setCount] = useState(value)
@@ -85,7 +85,7 @@ export const StarButton = ({
     ])
 
     const toggleStar = () => {
-        console.log(userStarred ? 'removing' : 'adding')
+        // console.log(userStarred ? 'removing' : 'adding')
         if (!userStarred)
             mutateAddStar({
                 variables: { starrableId },

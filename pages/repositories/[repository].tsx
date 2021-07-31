@@ -9,7 +9,9 @@ import Link from 'next/link';
 import { RepoDetails } from '@/ts/interfaces';
 import { RootObject } from './../../ts/interfaces';
 import { StarButton } from './../../src/components/Table/StarButton';
-
+import Image from 'next/image';
+import { useRouter } from 'next/router'
+import { UserPanel } from './../../src/components/UserPanel/UserPanel';
 
 
 
@@ -21,21 +23,28 @@ const Repository = ({
     client: ApolloClient<NormalizedCacheObject>
 }) => {
     // console.log("%c ☑️: Repository -> data ", "font-size:16px;background-color:#f35dd1;color:white;", data1)
+    const router = useRouter()
+    console.log("%c 📷: router ",
+        "font-size:16px;background-color:#c975a7;color:white;",
+        router.query)
 
-    const {
-        selectedName,
-        setSelectedName,
-        selectedOwner,
-        setSelectedOwner,
-    } = useUserStore(
-        state => ({
-            selectedName: state.selectedName,
-            setSelectedName: state.setSelectedName,
-            selectedOwner: state.selectedOwner,
-            setSelectedOwner: state.setSelectedOwner,
-        }),
-        shallow
-    )
+    console.log("%c ⛑️: router ",
+        "font-size:16px;background-color:#7c6457;color:white;",
+        router.query.owner, router.query.repository)
+    // const {
+    //     selectedName,
+    //     setSelectedName,
+    //     selectedOwner,
+    //     setSelectedOwner,
+    // } = useUserStore(
+    //     state => ({
+    //         selectedName: state.selectedName,
+    //         setSelectedName: state.setSelectedName,
+    //         selectedOwner: state.selectedOwner,
+    //         setSelectedOwner: state.setSelectedOwner,
+    //     }),
+    //     shallow
+    // )
     const [repoData, setRepoData] = useState({
         diskUsage: 0,
         id: '',
@@ -57,7 +66,7 @@ const Repository = ({
     })
     const [stars, setStars] = useState(repoData.stargazerCount)
     useEffect(() => {
-        if (client && selectedName && selectedOwner) {
+        if (client && router.query.repository && router.query.owner) {
             // console.log({
             //     name: selectedName
             //     , owner: selectedOwner
@@ -69,8 +78,8 @@ const Repository = ({
                         query: GET_REPO,
                         variables: {
 
-                            name: selectedName
-                            , owner: selectedOwner
+                            name: router.query.repository
+                            , owner: router.query.owner
 
 
                         },
@@ -90,21 +99,34 @@ const Repository = ({
         return () => {
 
         }
-    }, [client, selectedName, selectedOwner])
+    }, [client, router.query.repository, router.query.owner])
 
     return (
         <div>
-            <p>Selected repository: {selectedName} {selectedOwner}</p>
+            <UserPanel />
+            <p>Selected repository: {repoData.name} {repoData.owner.login}</p>
             <Link
-                href={`https://github.com/${selectedOwner}/${selectedName}/`}
+                href={'/repositories'}
+            ><a
+
+            >Back</a></Link>
+            <Link
+                href={`https://github.com/${repoData.owner.login}/${repoData.name}/`}
             ><a
                 target="_blank"
-            >Commit Url</a></Link>
+                >Repo Url</a></Link>
             <pre>{JSON.stringify(repoData, null, 2)}</pre>
-            <div>{repoData.object.text}</div>
+            <div>{repoData?.object?.text ? repoData.object.text : 'No master:README.md'}</div>
             <div>{repoData.diskUsage}</div>
             <div>{repoData.name}</div>
             <div>{repoData.owner.login}</div>
+
+            <Image
+                src={repoData.owner.avatarUrl || '/1476.gif'}
+                width={90}
+                height={90}
+            />
+            <div>{repoData.owner.avatarUrl}</div>
             <div>{repoData.description}</div>
             <div>{repoData.createdAt}</div>
             <div>{repoData.updatedAt}</div>

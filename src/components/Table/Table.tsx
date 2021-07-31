@@ -121,9 +121,9 @@ export const Table = ({ data, loading }: TableProps) => {
                             {row.cells.map((cell, l) => {
 
 
-                                console.log("%c 🍫: Table -> cell ",
-                                    "font-size:16px;background-color:#73c829;color:white;",
-                                    cell)
+                                // console.log("%c 🍫: Table -> cell ",
+                                //     "font-size:16px;background-color:#73c829;color:white;",
+                                //     cell)
                                 if (cell.column.id === 'name') {
                                     return (<td
                                         {...cell.getCellProps()}
@@ -131,7 +131,14 @@ export const Table = ({ data, loading }: TableProps) => {
                                     >
 
                                         <Link
-                                            href={`/repositories/${row.original.owner.login}'s_${row.original.name}`}
+                                            href={
+                                                {
+                                                    pathname: `/repositories/${row.original.name}`
+                                                    , query: {
+                                                        owner: row.original.owner.login,
+                                                        // name: row.original.name
+                                                    }
+                                                }}
                                         >
                                             <a
                                                 onClick={() => {

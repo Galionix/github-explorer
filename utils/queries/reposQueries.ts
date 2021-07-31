@@ -310,3 +310,25 @@ export const GET_REPO = gql`
 		}
 	}
 `
+
+export const CREATE_REPO = gql`
+	${NODE_DATA}
+	mutation CreateRepo(
+		$name: String!
+		$visibility: RepositoryVisibility!
+		$description: String
+	) {
+		__typename
+		createRepository(
+			input: {
+				name: $name
+				visibility: $visibility
+				description: $description
+			}
+		) {
+			repository {
+				...nodeData
+			}
+		}
+	}
+`
