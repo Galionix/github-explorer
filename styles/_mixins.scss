@@ -16,7 +16,7 @@
 }
 
 @mixin main-layout {
-	min-height: calc(100vh - 60px);
+	min-height: calc(100vh - 293px);
 	display: grid;
 	grid-template-columns: [panel] 1fr [content] 8fr;
 	grid-template-rows:
