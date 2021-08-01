@@ -14,10 +14,11 @@ import Link from 'next/link';
 import { ApolloConsumer } from '@apollo/client';
 import { useUserStore } from 'utils/useUserStore';
 import shallow from 'zustand/shallow';
+import { motion, AnimatePresence } from 'framer-motion';
 TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
-
+const transition = { duration: .6, ease: [.43, .13, 0.23, .96] }
 
 
 export const Table = ({ data, loading, setRepos }: TableProps) => {
@@ -128,10 +129,22 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                     //     row)
                     prepareRow(row)
                     return (
-                        <tr
+                        // <AnimatePresence>
+                        <motion.tr
+                            // initial={{ x: 100, opacity: 0 }}
+                            // animate={{ x: 0, opacity: 1 }}
+                            // transition={{
+                            //     ...transition,
+                            //     delay: 0.05 * k
+                            // }}
 
                             {...row.getRowProps()}
                             key={k + 'row'}
+
+                            transition={
+                                transition
+                            }
+                            exit={{ opacity: 0 }}
                         >
 
                             {row.cells.map((cell, l) => {
@@ -188,9 +201,10 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                                         className={` ${s.owner} `}
 
                                     >
-                                        <div
+                                        <motion.div
                                             className={` ${s.ownerImage} `}
-
+                                            whileHover={{ scale: 1.1 }}
+                                            transition={transition}
                                         >
 
                                         <Image
@@ -205,7 +219,7 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                                             height={70}
                                             src={cell.value.avatarUrl}
                                             />
-                                        </div>
+                                        </motion.div>
                                         <span>{cell.value.login}</span>
 
                                     </td>
@@ -293,7 +307,8 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                                     key={l + '_cell'}
                                 >{cell.render('Cell')}</td>
                             })}
-                        </tr>
+                        </motion.tr>
+                            // </AnimatePresence>
                     )
                 })}
             </tbody>

@@ -1,13 +1,13 @@
 
-import Header from './../../src/components/Header/Header';
-import { useUserStore } from 'utils/useUserStore';
-import shallow from 'zustand/shallow';
+// import Header from './../../src/components/Header/Header';
+// import { useUserStore } from 'utils/useUserStore';
+// import shallow from 'zustand/shallow';
 import { GET_REPO } from '@/utils/queries/reposQueries';
 import { ApolloClient, NormalizedCacheObject, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { RepoDetails } from '@/ts/interfaces';
-import { RootObject } from './../../ts/interfaces';
+// import { RootObject } from './../../ts/interfaces';
 import { StarButton } from './../../src/components/Table/StarButton';
 import Image from 'next/image';
 import { useRouter } from 'next/router'
@@ -17,6 +17,11 @@ import { formatBytes } from './../../utils/utils';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import Head from 'next/head';
+import { motion, AnimatePresence } from 'framer-motion';
+import { buttonMotion } from '@/components/motionConfig';
+import { useUserStore } from './../../utils/useUserStore';
+import shallow from 'zustand/shallow';
+import { transition } from '@/components/motionConfig';
 
 
 TimeAgo.addDefaultLocale(en)
@@ -30,27 +35,22 @@ const Repository = ({
 }) => {
     // console.log("%c ☑️: Repository -> data ", "font-size:16px;background-color:#f35dd1;color:white;", data1)
     const router = useRouter()
-    // console.log("%c 📷: router ",
-    //     "font-size:16px;background-color:#c975a7;color:white;",
-    //     router.query)
+    const {
+        user,
 
-    // console.log("%c ⛑️: router ",
-    //     "font-size:16px;background-color:#7c6457;color:white;",
-    //     router.query.owner, router.query.repository)
-    // const {
-    //     selectedName,
-    //     setSelectedName,
-    //     selectedOwner,
-    //     setSelectedOwner,
-    // } = useUserStore(
-    //     state => ({
-    //         selectedName: state.selectedName,
-    //         setSelectedName: state.setSelectedName,
-    //         selectedOwner: state.selectedOwner,
-    //         setSelectedOwner: state.setSelectedOwner,
-    //     }),
-    //     shallow
-    // )
+    } = useUserStore(
+        state => ({
+            user: state.user,
+
+        }),
+        shallow
+    )
+    useEffect(() => {
+
+
+        if (router && !user)
+            router.replace('/')
+    }, [router])
     const [repoData, setRepoData] = useState({
         diskUsage: 0,
         id: '',
@@ -136,16 +136,22 @@ const Repository = ({
                         </span>
                     </a></Link>
 
+                <motion.div
+                    className={` ${s.external} `}
+                    style={{ cursor: 'pointer' }}
+                    {...buttonMotion}
+                >
 
-                <Link
-                    href={`https://github.com/${repoData.owner.login}/${repoData.name}/`}
-                ><a
-                        className={` ${s.external} `}
+                    <Link
+                        href={`https://github.com/${repoData.owner.login}/${repoData.name}/`}
+                    ><a
+
 
                         target="_blank"
                     >                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg></a></Link>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg></a></Link>
+                </motion.div>
 
                 <h1
                     className={` ${s.login} `}
@@ -155,17 +161,31 @@ const Repository = ({
                     className={` ${s.name} `}
 
                 >{repoData.name}</h2>
+                <AnimatePresence>
 
-                <div
+                    <motion.div
+                        // initial={
+                        //     {
+                        //         width: 90,
+                        //         height: 90,
+                        //     }
+                        // }
 
+                        // animate={{
+                        //     width: 300,
+                        //     height: 300,
+                        // }}
+                        exit={{ opacity: 0 }}
+                        transition={transition}
                     className={s.avatar}
-                >
+                    >
                     <Image
                         src={repoData.owner.avatarUrl || '/1476.gif'}
                         width={300}
                         height={300}
-                    />
-                </div>
+                        />
+                    </motion.div>
+                </AnimatePresence>
                 {/* <div>{repoData.owner.avatarUrl}</div> */}
                 <div
                     className={` ${s.description} `}
@@ -190,12 +210,12 @@ const Repository = ({
                             value: number,
                             starred: boolean
                         }) => {
-                            console.log("%c 👊: starred ",
-                                "font-size:16px;background-color:#ef4781;color:white;",
-                                {
-                                    value,
-                                    starred
-                                })
+                            // console.log("%c 👊: starred ",
+                            //     "font-size:16px;background-color:#ef4781;color:white;",
+                            //     {
+                            //         value,
+                            //         starred
+                            //     })
 
 
                             setRepoData({

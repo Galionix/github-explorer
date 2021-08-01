@@ -11,6 +11,10 @@ import { Form as FForm, Field, Formik } from "formik"
 import { useRouter } from 'next/router'
 import s from './panel.module.scss'
 import Modal from 'react-modal';
+import { motion } from 'framer-motion';
+import { buttonMotion } from '../motionConfig';
+
+
 
 const customStyles = {
     content: {
@@ -89,10 +93,13 @@ export const UserPanel = () => {
 
 
     return (
-        <div
+        <motion.div
+
             className={s.panel}
         >{user && <>
-                <div className={s.image}>
+                <div className={s.image}
+
+                >
 
             <Image
                 src={user?.picture || '/1476.gif'}
@@ -106,10 +113,11 @@ export const UserPanel = () => {
                 <p
                     className={` ${s.name} `}
                 >{user?.name}</p>
-                <button
+                <motion.button
                     className={` ${s.new} `}
                     title={`Create new repo`}
                     onClick={() => setModalOpen(true)}
+                    {...buttonMotion}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -117,17 +125,18 @@ export const UserPanel = () => {
                     <span>
                         New
                     </span>
-                </button>
+                </motion.button>
 
                 <Modal
                     isOpen={modalOpen}
                     style={customStyles}
                     onRequestClose={() => setModalOpen(false)}
                 ><div className={s.modalContent}>
-                        <button
+                        <motion.button
+                            {...buttonMotion}
                             className={s.btn_close}
                             onClick={() => setModalOpen(false)}
-                        >Close</button>
+                        >Close</motion.button>
                         <div
                             className={s.heading}
                         >Create new repo</div>
@@ -216,9 +225,10 @@ export const UserPanel = () => {
                                     <Field as="textarea"
                                         name="description"
                                         onChange={handleChange} />
-                                    <button
+                                    <motion.button
+                                        {...buttonMotion}
                                         disabled={isSubmitting}
-                                        type="submit">Submit</button>
+                                        type="submit">Submit</motion.button>
                                 </FForm>
                             )}</Formik>
                     </div>
@@ -229,16 +239,17 @@ export const UserPanel = () => {
                     >
                         <p>submission Error!</p>
                         <p>{JSON.stringify(submissionError, null, 2)}</p>
-                        <button
+                        <motion.button
+                            {...buttonMotion}
                             className={s.error_close}
                             onClick={() => {
                                 setSubmissionError('')
                             }}
-                        >Dismiss</button>
+                        >Dismiss</motion.button>
                     </Modal>
                 </Modal>
             </>}
 
-        </div>
+        </motion.div>
     )
 }

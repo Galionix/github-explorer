@@ -4,6 +4,8 @@ import { useUserStore } from 'utils/useUserStore';
 import shallow from 'zustand/shallow';
 import s from './button.module.scss'
 import { useRouter } from 'next/router'
+import { motion } from 'framer-motion';
+import { buttonMotion } from '../motionConfig';
 
 
 export const SignButton = () => {
@@ -52,7 +54,8 @@ export const SignButton = () => {
 
     return (
         <div>
-            {!userStore ? <button
+            {!userStore ? <motion.button
+                {...buttonMotion}
                 className={s.button}
                 disabled={sessionLoading}
                 // href={`/api/auth/signin`}
@@ -86,7 +89,8 @@ export const SignButton = () => {
                 }}
             >
                 Sign in
-            </button> : <button
+            </motion.button> : <motion.button
+                {...buttonMotion}
                 // href={`/api/auth/signout`}
                     className={`${s.disabled} ${s.button}`}
                 onClick={e => {
@@ -105,7 +109,7 @@ export const SignButton = () => {
                 }}
             >
                 Sign out
-            </button>
+                </motion.button>
             }
         </div>
     )

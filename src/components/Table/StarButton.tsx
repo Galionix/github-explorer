@@ -8,6 +8,8 @@ import { StarButtonProps } from '@/ts/interfaces'
 import { ADD_STAR } from '@/utils/queries/reposQueries'
 import { REMOVE_STAR } from './../../../utils/queries/reposQueries'
 import s from './starButton.module.scss'
+import { motion } from 'framer-motion'
+import { buttonMotion } from '../motionConfig'
 
 
 export const StarButton = ({
@@ -136,10 +138,11 @@ export const StarButton = ({
     }
 
     return (
-        <button
+        <motion.button
             disabled={globalLoading}
             onClick={toggleStar}
             className={s.starButton}
+            {...buttonMotion}
         >
 
                 <svg
@@ -158,6 +161,6 @@ export const StarButton = ({
                 </svg>
             <span>
                 {count}</span>
-        </button>
+        </motion.button>
     )
 }

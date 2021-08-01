@@ -50,6 +50,8 @@ import { formatBytes } from './../../utils/utils';
 import { UserPanel } from './../../src/components/UserPanel/UserPanel';
 import Link from 'next/link';
 import Head from 'next/head';
+import { motion } from 'framer-motion'
+import { buttonMotion } from '@/components/motionConfig'
 
 const no_repos_message = 'No repos.'
 
@@ -681,17 +683,19 @@ export default function Repositories({
                         >
                             {pageInfo.hasPreviousPage &&
                                 !(repoNameSearch !== '' && !globalSearch) &&
-                                <button
+                                <motion.button
+                                    {...buttonMotion}
                                     className={` ${s.prev} `}
                                     disabled={!pageInfo.hasPreviousPage || loading}
                                     onClick={() => {
                                         setTimeout(
                                             prevPage, 100)
                                     }}
-                                >Previous page</button>}
+                                >Previous page</motion.button>}
                             {pageInfo.hasNextPage &&
                                 !(repoNameSearch !== '' && !globalSearch) && (
-                                <button
+                                <motion.button
+                                    {...buttonMotion}
                                     className={` ${s.next} `}
                                     disabled={
                                         !pageInfo.hasNextPage || loading
@@ -699,7 +703,7 @@ export default function Repositories({
                                     onClick={nextPage}
                                 >
                                     Next page
-                                </button>
+                                </motion.button>
                             )}
                         </div>
                         <div

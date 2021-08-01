@@ -2,17 +2,28 @@ import Head from 'next/head'
 import Image from 'next/image'
 // import { useTokenStore } from '';
 // import { useTokenStore } from '../utils/useUserStore';
-import { AppProps } from 'next/app';
-import { InferGetStaticPropsType } from 'next';
-import { useRouter } from 'next/dist/client/router';
+// import { AppProps } from 'next/app';
+// import { InferGetStaticPropsType } from 'next';
+// import { useRouter } from 'next/dist/client/router';
 import { useEffect, useState } from 'react';
-import Header from './../src/components/Header/Header';
-import { useSession } from 'next-auth/client';
+// import Header from './../src/components/Header/Header';
+// import { useSession } from 'next-auth/client';
 import { useUserStore } from './../utils/useUserStore';
-import { SignButton } from '@/components/SignButton/SignButton';
+// import { SignButton } from '@/components/SignButton/SignButton';
 import Link from 'next/link';
 import { UserPanel } from './../src/components/UserPanel/UserPanel';
 import s from '@/styles/homePage.module.scss';
+import { AnimatePresence, motion } from 'framer-motion'
+import { transition } from '@/components/motionConfig';
+
+const exit = {
+
+  opacity: 0
+
+
+}
+
+
 
 export default function Home(data: any) {
 
@@ -55,24 +66,31 @@ export default function Home(data: any) {
           href="/favicon.ico" />
       </Head>
       {/* <Header /> */}
-      <main
+      <motion.main
         className={s.layout}
+        // exit={exit}
+        transition={transition}
       >
         <UserPanel />
         <div
           className={s.content}
         >{user ?
           <>
-        <h1  >
-          {`Hello, ${user.name}!`}
-        </h1>
-        <Link
-          href='/repositories/'
-        >
-                <a
+              <motion.h1
+              // exit={exit}
+
+              >
+                {`Hello, ${user.name}!`}
+              </motion.h1>
+              <Link
+                href='/repositories/'
+              >
+                <motion.a
+                  // exit={exit}
                   className={s.go}
-                >Browse repositories</a>
-        </Link>
+                  style={{ cursor: 'pointer' }}
+                >Browse repositories</motion.a>
+              </Link>
 
             </> : <>
               <h1
@@ -82,22 +100,26 @@ export default function Home(data: any) {
               {/* <SignButton /> */}
 
             </>
-          }            <h2>{`This app was created by `}
-              <Link
-                href="https://github.com/Galionix"
+          }            <motion.h2
+          // exit={exit}
+          >{`This app was created by `}
+            <Link
+              href="https://github.com/Galionix"
+            >
+              <a
+                target="_blank"
               >
-                <a
-                  target="_blank"
-                >
                 Galionix
 
-                </a>
-              </Link>
-            {` for archicgi`}</h2>
+              </a>
+            </Link>
+            {` for archicgi`}</motion.h2>
           {
             repos.total_count > 0 && <>
-              <div
+              <motion.div
+                key='my_avatar'
 
+                transition={transition}
 
                 className={s.avatar}
               >
@@ -107,46 +129,92 @@ export default function Home(data: any) {
                   height={50}
                   layout='fixed'
                 />
-                <svg xmlns="http://www.w3.org/2000/svg"
+                <motion.svg
+                  xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
                   viewBox="0 0 20 20"
                   fill="tomato"
+                  animate={{
+                    scale: [0.9, 1.1, 0.8, 1.2, 0.7],
+                  }}
+                  transition={{
+                    ease: [0.6, 0.01, -0.05, 0.9],
+                    repeat: Infinity,
+
+
+                  }}
+                  // exit={exit}
                 >
                   <path fillRule="evenodd"
                     d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <p>Check out my latest projects:</p>
-            <ul>
+                </motion.svg>
+              </motion.div>
+              <motion.p
+              // exit={exit}
+              >Check out my latest projects:</motion.p>
+              <motion.ul
+              // exit={exit}
+              >
+                <AnimatePresence>
 
-              {
+
+                  {
 
 
-                  repos.items.map(({ name }, i) => (
-                  <li
-                    key={i}
-                  >
+                    repos.items.map(({ name }, i) => (
+                      <li
 
-                      <Link
-                        // prefetch
-                        href={`/repositories/${name}?owner=Galionix`}
-                    >
-                      <a >
+                        style={{
+                          overflow: 'hidden'
+                        }}
+                        key={i}
+                      >
+                        <motion.div
+                          initial={{
+                            y: 100,
+                            opacity: 0.5
+                          }}
+                          transition={{
+                            ease: [0.6, 0.01, -0.05, 0.9],
+                            type: 'tween',
+                            duration: 1 * i,
+                          }}
+                          animate={{
+                            y: 0,
+                            opacity: 1
 
-                        {name}
-                      </a>
-                      </Link>
-                      <p> </p>
-                  </li>
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <Link
+                            // prefetch
+                            href={`/repositories/${name}?owner=Galionix`}
+                          >
+                            <motion.a
 
-                ))
-              }
-              </ul>
-          </>
-        }
+
+                            >
+
+                              {name}
+                            </motion.a>
+                          </Link>
+                        </motion.div>
+
+                        <p
+
+                        > </p>
+                      </li>
+
+                    ))
+                  }
+                </AnimatePresence>
+
+              </motion.ul>
+            </>
+          }
         </div>
 
-      </main>
+      </motion.main>
 
 
     </>

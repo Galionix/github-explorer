@@ -20,10 +20,25 @@ import { Session } from '@/ts/interfaces';
 import '@/styles/index.scss'
 import { Navigation } from './../src/components/Nav/Navigation';
 import { Footer } from './../src/components/Footer/Footer';
+import { motion, AnimateSharedLayout, AnimatePresence } from 'framer-motion';
+import { transition } from '@/components/motionConfig';
 
+const variants = {
+  hidden: {
+    opacity: 0,
+    x: -200,
+  },
+  enter: {
+    opacity: 1,
+    x: 0,
+  },
+  exit: {
+    opacity: 0,
+    x: 200,
+  },
+}
 
-
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps, router }: AppProps) {
 
 
   // type AuthenticatedUser = {
@@ -143,10 +158,32 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       {/* {client && <p>client got!</p>} */}
 
+      {/* <AnimateSharedLayout
+      // type='crossfade'
 
+      > */}
       <Navigation />
-      <Component {...pageProps} client={client} />
+      <AnimatePresence
+        exitBeforeEnter
+        initial={false}
+      >
+        <motion.div
+          key={router.route}
+          // initial={{ scaleX: 1 }}
+          // animate={{ scaleX: 0 }}
+          // exit={{ scaleX: 0 }}
+          // transition={{ duration: 1, ease: "easeInOut" }}
+          variants={variants} // Pass the variant object into Framer Motion 
+          initial="hidden" // Set the initial state to variants.hidden
+          animate="enter" // Animated state to variants.enter
+          exit="exit" // Exit state (used later) to variants.exit
+          transition={transition} // Set the transition to linear
+        >
+          <Component {...pageProps} client={client} />
+        </motion.div>
+      </AnimatePresence>
       <Footer />
+      {/* </AnimateSharedLayout> */}
     </ApolloProvider>
   </AuthProvider>
 }
