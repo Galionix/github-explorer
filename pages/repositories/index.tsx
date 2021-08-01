@@ -108,14 +108,7 @@ export default function Repositories({
     )
 
     const globalSearch = ownerFilter === ''
-	// const user =
-	//     useUserStore((state) => state.user);
 
-	// const [ownerFliter, setOwnerFliter] = useState<Owner>(
-	//     { login: '', avatarUrl: '' }
-	// )
-
-	// useEffect(() => { if (user && ownerFilter === '') setOwnerFilter(user.login) }, [user])
 
     const [repos, setRepos] = useState<Node[]>([])
 
@@ -354,7 +347,7 @@ export default function Repositories({
 
     }
 
-    const data = useMemo(() => repos, [repos])
+    // const data =  repos 
     const [error, setError] = useState('')
     useEffect(() => {
         // debounce(() => {
@@ -362,7 +355,7 @@ export default function Repositories({
 
         if (client && user) {
             if (!globalSearch) {
-                console.log('owner search')
+                // console.log('owner search')
 
                 download({
                     client,
@@ -374,7 +367,7 @@ export default function Repositories({
                     repoNameSearch,
                 })
             } else {
-                console.log('global search')
+                // console.log('global search')
 
                 downloadRepo({
                     client,
@@ -427,7 +420,7 @@ export default function Repositories({
                         },
                     })
                     .then((res: RootObject) => {
-                        console.log("%c 👩‍👦‍👦: res ", "font-size:16px;background-color:#2e6946;color:white;", res)
+                        // console.log("%c 👩‍👦‍👦: res ", "font-size:16px;background-color:#2e6946;color:white;", res)
                         setLoading(false)
                         if (res.data.repositoryOwner) {
                             setRepoData({ res, repoNameSearch })
@@ -463,7 +456,7 @@ export default function Repositories({
                         },
                     })
                     .then((res: NoLogin.RootObject) => {
-                        console.log("%c 📵: res ", "font-size:16px;background-color:#77e2bf;color:black;", res)
+                        // console.log("%c 📵: res ", "font-size:16px;background-color:#77e2bf;color:black;", res)
                         setLoading(false)
                         if (
                             res.data.search.repositoryCount > 0
@@ -484,6 +477,7 @@ export default function Repositories({
         ),
         []
     )
+    const data = useMemo(() => repos, [repos])
 
     return (
         <div
@@ -605,7 +599,7 @@ export default function Repositories({
                 </div>
                 {repos.length > 0 && user && (
                     <>
-                        <Table data={data} loading={loading} />
+                        <Table data={repos} loading={loading} setRepos={setRepos} />
                         {/* <pre>{JSON.stringify(pageInfo, null, 2)}</pre> */}
                         <div
                             className={` ${s.buttonGroup} `}

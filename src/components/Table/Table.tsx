@@ -1,5 +1,5 @@
 import { TableProps } from '@/ts/interfaces'
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { Column, TableInstance, useTable } from 'react-table'
 import { StarButton } from './StarButton';
@@ -20,8 +20,17 @@ const timeAgo = new TimeAgo('en-US')
 
 
 
-export const Table = ({ data, loading }: TableProps) => {
+export const Table = ({ data, loading, setRepos }: TableProps) => {
     // Use the state and functions returned from useTable to build your UI
+
+    // const [repos, setRepos] = useState(data)
+    // useEffect((
+
+
+    // ) => {
+    //     setRepos(data)
+
+    // }, [data])
     const {
         selectedName,
         setSelectedName,
@@ -37,6 +46,7 @@ export const Table = ({ data, loading }: TableProps) => {
         shallow
     )
     const headerDefinition = () => <span></span>
+
 
 
     const columns: Column<Node>[] = useMemo(
@@ -246,9 +256,18 @@ export const Table = ({ data, loading }: TableProps) => {
                                     >
                                         {/* Apollo */}
                                         {/* <ApolloConsumer> */}
-
                                         <StarButton
-
+                                            setRepos={({ value, starred }: { value: number, starred: boolean }) =>
+                                                setRepos([
+                                                    ...data.slice(0, row.index),
+                                                    {
+                                                        ...data[row.index],
+                                                        stargazerCount: value,
+                                                        viewerHasStarred: starred
+                                                    },
+                                                    ...data.slice(row.index + 1)
+                                                ])
+                                            }
                                             value={cell.value}
                                             id={cell.row.original.id}
                                             globalLoading={loading}

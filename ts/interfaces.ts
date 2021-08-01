@@ -20,6 +20,7 @@ export interface TableProps {
 	// columns: Column<RepoData>[]
 
 	loading: boolean
+	setRepos: Function
 	// setLoading: Function
 	// any props that come into the component
 }
@@ -28,6 +29,7 @@ export type StarButtonProps = {
 	id: string
 	globalLoading: boolean
 	starred: boolean
+	setRepos: Function
 	// setLoading: Function
 }
 

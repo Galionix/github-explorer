@@ -139,7 +139,7 @@ export const UserPanel = () => {
                                 values,
                                 { setSubmitting, resetForm }
                             ) => {
-                                console.log(values)
+                                // console.log(values)
                                 setRepoDetails(values)
                                 createRepo().then((res) => {
                                     // console.log("%c 👎: res ",

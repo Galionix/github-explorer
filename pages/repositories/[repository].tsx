@@ -30,13 +30,13 @@ const Repository = ({
 }) => {
     // console.log("%c ☑️: Repository -> data ", "font-size:16px;background-color:#f35dd1;color:white;", data1)
     const router = useRouter()
-    console.log("%c 📷: router ",
-        "font-size:16px;background-color:#c975a7;color:white;",
-        router.query)
+    // console.log("%c 📷: router ",
+    //     "font-size:16px;background-color:#c975a7;color:white;",
+    //     router.query)
 
-    console.log("%c ⛑️: router ",
-        "font-size:16px;background-color:#7c6457;color:white;",
-        router.query.owner, router.query.repository)
+    // console.log("%c ⛑️: router ",
+    //     "font-size:16px;background-color:#7c6457;color:white;",
+    //     router.query.owner, router.query.repository)
     // const {
     //     selectedName,
     //     setSelectedName,
@@ -62,15 +62,15 @@ const Repository = ({
         createdAt: 0,
         updatedAt: 0,
         stargazerCount: 0,
+        viewerHasStarred: false,
         owner: { avatarUrl: '', login: '' },
         object: {
             commitUrl: '',
             // id: '',
             text: ''
         },
-        viewerHasStarred: false,
     })
-    const [stars, setStars] = useState(repoData.stargazerCount)
+    // const [stars, setStars] = useState(repoData.stargazerCount)
     useEffect(() => {
         if (client && router.query.repository && router.query.owner) {
             // console.log({
@@ -97,7 +97,7 @@ const Repository = ({
                     //     "font-size:16px;background-color:#af3bdd;color:white;",
                     //     res)
                     setRepoData(res.data.repository)
-                    setStars(res.data.repository.stargazerCount)
+                    // setStars(res.data.repository.stargazerCount)
                     // console.log("%c 🗝️: res.data.repository.stargazerCount ", "font-size:16px;background-color:#3212c4;color:white;", res.data.repository.stargazerCount)
                 })
         }
@@ -183,12 +183,39 @@ const Repository = ({
                 >
 
                     <StarButton
-                        value={stars}
+                        setRepos={({
+                            value,
+                            starred
+                        }: {
+                            value: number,
+                            starred: boolean
+                        }) => {
+                            console.log("%c 👊: starred ",
+                                "font-size:16px;background-color:#ef4781;color:white;",
+                                {
+                                    value,
+                                    starred
+                                })
+
+
+                            setRepoData({
+                                ...repoData,
+                                stargazerCount: value,
+                                viewerHasStarred: starred,
+                            })
+
+                        }
+                        }
+
+                        value={repoData.stargazerCount}
                         id={repoData.id}
                         globalLoading={false}
                         starred={repoData.viewerHasStarred}
+
+
                     />
                 </div>
+                <pre>{JSON.stringify(repoData, null, 2)}</pre>
 
                 <div
                     className={` ${s.htmlContent} `}

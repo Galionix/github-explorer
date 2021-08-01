@@ -3,9 +3,11 @@ import { signIn, signOut, useSession } from 'next-auth/client';
 import { useUserStore } from 'utils/useUserStore';
 import shallow from 'zustand/shallow';
 import s from './button.module.scss'
+import { useRouter } from 'next/router'
 
 
 export const SignButton = () => {
+    const router = useRouter()
 
     const userStore = useUserStore(
         state => state.user
@@ -90,7 +92,7 @@ export const SignButton = () => {
                 onClick={e => {
                     setSessionLoading(true)
                     e.preventDefault()
-                        signOut({ redirect: false }).then(res => {
+                    signOut({ callbackUrl: '/' }).then(res => {
                         setUser(null)
                         setSessionLoading(false)
                         setPageSize(5),
@@ -98,6 +100,7 @@ export const SignButton = () => {
                             setSortingField("STARGAZERS"),
                             setOwnerFilter('')
                         setRepoNameSearch('')
+
                     })
                 }}
             >

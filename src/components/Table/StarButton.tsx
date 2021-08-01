@@ -15,6 +15,7 @@ export const StarButton = ({
     value,
     id: starrableId,
     globalLoading,
+    setRepos
 }: StarButtonProps) => {
 
     // console.log({
@@ -67,6 +68,7 @@ export const StarButton = ({
     useEffect(() => {
 
         setCount(value)
+        // console.log("%c 🇨🇦: value ", "font-size:16px;background-color:#5e3df6;color:white;", value)
     }, [value])
 
     // useEffect(() => {
@@ -100,11 +102,12 @@ export const StarButton = ({
                         },
                     },
                 }) => {
-                    setCount(stargazerCount)
-                    setUserStarred(viewerHasStarred)
+                    setRepos({ value: stargazerCount, starred: viewerHasStarred })
+                    // setCount(stargazerCount)
+                    // setUserStarred(viewerHasStarred)
                     // setStarFillColor('#FFDF00')
                 }
-            )
+            ).catch(alert)
         else {
             mutateRemoveStar({
                 variables: { starrableId },
@@ -119,12 +122,15 @@ export const StarButton = ({
                         },
                     },
                 }) => {
-                    setCount(stargazerCount)
-                    setUserStarred(viewerHasStarred)
+                    setRepos({ value: stargazerCount, starred: viewerHasStarred })
+
+
+                    // setCount(stargazerCount)
+                    // setUserStarred(viewerHasStarred)
                     // setStarFillColor('none')
 					// console.log(res)
                 }
-            )
+            ).catch(alert)
         }
         // setStarFillColor("yellow")
     }
