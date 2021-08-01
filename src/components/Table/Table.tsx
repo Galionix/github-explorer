@@ -131,8 +131,8 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                     return (
 
                         <motion.tr
-                            initial={{ x: 100, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
+                            initial={{ x: '100px', opacity: 0 }}
+                            animate={{ x: '0px', opacity: 1 }}
                             transition={{
                                 ...transition,
                                 delay: 0.05 * k

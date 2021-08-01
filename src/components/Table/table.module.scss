@@ -29,6 +29,9 @@
 	}
 }
 .table {
+	tbody{
+		overflow-x: hidden;
+	}
 	th {
 		@media screen and (max-width: 767px) {
 			font-size: clamp(10px, 2vw, 30px);
