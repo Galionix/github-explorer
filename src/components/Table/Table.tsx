@@ -129,21 +129,19 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                     //     row)
                     prepareRow(row)
                     return (
-                        // <AnimatePresence>
+
                         <motion.tr
-                            // initial={{ x: 100, opacity: 0 }}
-                            // animate={{ x: 0, opacity: 1 }}
-                            // transition={{
-                            //     ...transition,
-                            //     delay: 0.05 * k
-                            // }}
+                            initial={{ x: 100, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{
+                                ...transition,
+                                delay: 0.05 * k
+                            }}
 
                             {...row.getRowProps()}
                             key={k + 'row'}
 
-                            transition={
-                                transition
-                            }
+
                             exit={{ opacity: 0 }}
                         >
 
@@ -308,7 +306,7 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                                 >{cell.render('Cell')}</td>
                             })}
                         </motion.tr>
-                            // </AnimatePresence>
+
                     )
                 })}
             </tbody>

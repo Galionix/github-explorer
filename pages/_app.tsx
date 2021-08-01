@@ -26,15 +26,15 @@ import { transition } from '@/components/motionConfig';
 const variants = {
   hidden: {
     opacity: 0,
-    x: -200,
+    // x: -200,
   },
   enter: {
     opacity: 1,
-    x: 0,
+    // x: 0,
   },
   exit: {
     opacity: 0,
-    x: 200,
+    // x: 200,
   },
 }
 
@@ -159,15 +159,15 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       {/* {client && <p>client got!</p>} */}
 
       {/* <AnimateSharedLayout
-      // type='crossfade'
+        type='crossfade'
 
       > */}
       <Navigation />
-      <AnimatePresence
+      {/* <AnimatePresence
         exitBeforeEnter
-        initial={false}
-      >
-        <motion.div
+        // initial={false}
+      > */}
+      {/* <motion.div
           key={router.route}
           // initial={{ scaleX: 1 }}
           // animate={{ scaleX: 0 }}
@@ -178,10 +178,10 @@ function MyApp({ Component, pageProps, router }: AppProps) {
           animate="enter" // Animated state to variants.enter
           exit="exit" // Exit state (used later) to variants.exit
           transition={transition} // Set the transition to linear
-        >
+        > */}
           <Component {...pageProps} client={client} />
-        </motion.div>
-      </AnimatePresence>
+      {/* </motion.div> */}
+      {/* </AnimatePresence> */}
       <Footer />
       {/* </AnimateSharedLayout> */}
     </ApolloProvider>
