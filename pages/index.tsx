@@ -115,8 +115,10 @@ export default function Home(data: any) {
               {
 
 
-                repos.items.map(({ name, html_url }) => (
-                  <li>
+                repos.items.map(({ name, html_url }, i) => (
+                  <li
+                    key={i}
+                  >
 
                     <Link
                       href={html_url}
