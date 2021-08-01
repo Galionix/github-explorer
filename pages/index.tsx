@@ -128,7 +128,7 @@ export default function Home(data: any) {
                   >
 
                       <Link
-                        prefetch
+                        // prefetch
                         href={`/repositories/${name}?owner=Galionix`}
                     >
                       <a >
