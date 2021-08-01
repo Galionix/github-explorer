@@ -65,11 +65,11 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                     },
 
                     {
-                        Header: 'createdAt',
+                        Header: 'Created',
                         accessor: 'createdAt',
                     },
                     {
-                        Header: 'UPD',
+                        Header: 'Updated',
                         accessor: 'updatedAt',
                     },
                     {
@@ -77,7 +77,7 @@ export const Table = ({ data, loading, setRepos }: TableProps) => {
                         accessor: 'stargazerCount',
                     },
                     {
-                        Header: 'diskUsage',
+                        Header: 'Size',
                         accessor: 'diskUsage',
                     },
                 ],
