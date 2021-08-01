@@ -115,7 +115,7 @@ const Repository = ({
             ><a
                 target="_blank"
                 >Repo Url</a></Link>
-            <pre>{JSON.stringify(repoData, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(repoData, null, 2)}</pre> */}
             <div>{repoData?.object?.text ? repoData.object.text : 'No master:README.md'}</div>
             <div>{repoData.diskUsage}</div>
             <div>{repoData.name}</div>

@@ -5,12 +5,13 @@ import Image from 'next/image'
 import { AppProps } from 'next/app';
 import { InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/dist/client/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './../src/components/Header/Header';
 import { useSession } from 'next-auth/client';
 import { useUserStore } from './../utils/useUserStore';
 import { SignButton } from '@/components/SignButton/SignButton';
 import Link from 'next/link';
+import { UserPanel } from './../src/components/UserPanel/UserPanel';
 
 
 export default function Home(data: any) {
@@ -33,15 +34,26 @@ export default function Home(data: any) {
     useUserStore((state) => state.user);
   // console.log("%c 🇫🇷: Home -> user ", "font-size:16px;background-color:#73ca34;color:white;", user)
 
+  const [repos, setRepos] = useState({
+    total_count: 0,
+    items: [{
+      name: '',
+      html_url: '',
+      owner: {
+        avatar_url: '',
+        login: ''
+      }
+
+    }]
+  })
+  // const [repos, setRepos] = useState([])
   useEffect(() => {
-    // if (router && token === '')
-    //   router.push('/auth/sign-in')
-    // else {
-    //   const client = new ApolloClient({
-    //     uri: API_URL,
-    //     cache: new InMemoryCache(),
-    //   })
-    // }
+
+
+    fetch('https://api.github.com/search/repositories?q=user:galionix+sort:updated-desc&per_page=5')
+      .then(res => res.json())
+      .then(text => setRepos(text))
+
     return () => {
 
     }
@@ -57,12 +69,10 @@ export default function Home(data: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* <Header /> */}
-      <main >        {user ? <div>
-        <Image
+      <main >
 
-          width={100}
-          height={100}
-          src={user.picture} alt="" />
+        {user ? <div>
+          <UserPanel />
         <h1  >
           {`Hello, ${user.name}!`}
         </h1>
@@ -72,12 +82,59 @@ export default function Home(data: any) {
           <a >Browse repositories</a>
         </Link>
       </div>
-        : <h1  >
-          Hello, user! Please sign-in to browse.
-        </h1>
+          : <div>
+            <h1  >
+              Hello, user! Please sign-in to browse.
+            </h1>
+            <SignButton />
+          </div>
 
-      }
-        <SignButton />
+        }
+        {
+          repos.total_count > 0 && <div>
+            <p>{`This app was created by `}
+              <Link
+                href="https://github.com/Galionix"
+              >
+                <a
+                  target="_blank"
+                >
+                  {repos.items[0].owner.login}
+
+                </a>
+              </Link>
+              {` for archicgi`}</p>
+            <Image
+              src={repos.items[0].owner.avatar_url}
+              width={50}
+              height={50}
+            />
+            <p>Here are my latest projects:</p>
+            <ul>
+
+              {
+
+
+                repos.items.map(({ name, html_url }) => (
+                  <li>
+
+                    <Link
+                      href={html_url}
+                    >
+                      <a >
+
+                        {name}
+                      </a>
+                    </Link>
+                  </li>
+
+                ))
+              }
+            </ul>
+          </div>
+        }
+        {/* <pre>{JSON.stringify(repos, null, 2)}</pre> */}
+
         {/* <h1>{token || 'No token set.'}</h1> */}
         {/* {
           token && <>

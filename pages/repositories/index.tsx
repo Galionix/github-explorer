@@ -47,6 +47,8 @@ import { debounce } from 'lodash'
 import { Error } from './../../ts/interfaces'
 import { SEARCH_NEXT } from './../../utils/queries/reposQueries'
 import { formatBytes } from './../../utils/utils';
+import { UserPanel } from './../../src/components/UserPanel/UserPanel';
+import Link from 'next/link';
 
 export default function Repositories({
     client,
@@ -477,8 +479,27 @@ export default function Repositories({
 
     return (
         <div>
-            <SignButton />
-            <pre>
+            {user ? <div>
+                <UserPanel />
+                <h1  >
+                    {`Hello, ${user.name}!`}
+                </h1>
+
+            </div>
+                : <div>
+                    <h1  >
+                        Hello, user! Please sign-in to browse.
+                    </h1>
+                    <SignButton />
+                </div>
+
+            }
+            <Link
+                href='/'
+            >
+                <a >Home</a>
+            </Link>
+            {/* <pre>
                 {JSON.stringify(
                     {
                         user,
@@ -491,7 +512,7 @@ export default function Repositories({
                     null,
                     2
                 )}
-            </pre>
+            </pre> */}
             {error && <p>{error}</p>}
             <input
                 type='text'
@@ -615,9 +636,9 @@ export default function Repositories({
                     }}
                 >Previous page</button>}
 
-            <pre>
+            {/* <pre>
                 {JSON.stringify(pageInfo, null, 2)}
-            </pre>
+            </pre> */}
         </div>
     )
 }

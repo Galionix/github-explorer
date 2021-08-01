@@ -87,7 +87,7 @@ export const UserPanel = () => {
             <button
                 onClick={() => setModalOpen(true)}
             >New</button>
-            <pre>{JSON.stringify(repoDetails, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(repoDetails, null, 2)}</pre> */}
             {
 
 
