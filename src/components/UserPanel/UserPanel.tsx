@@ -90,7 +90,8 @@ export const UserPanel = () => {
     return (
         <div
             className={s.panel}
-        >
+        >{user && <>
+
             <Image
                 src={user?.picture || '/1476.gif'}
                 width={90}
@@ -98,157 +99,142 @@ export const UserPanel = () => {
             />
             <p
                 className={` ${s.login} `}
+                >{user?.login}</p>
+                <p
+                    className={` ${s.name} `}
+                >{user?.name}</p>
+                <button
+                    className={` ${s.new} `}
+                    title={`Create new repo`}
+                    onClick={() => setModalOpen(true)}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>
+                        New
+                    </span>
+                </button>
 
-            >{user?.login}</p>
-            <p
-                className={` ${s.name} `}
-
-            >{user?.name}</p>
-            {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
-            {/* <SignButton /> */}
-            <button
-                className={` ${s.new} `}
-                title={`Create new repo`}
-                onClick={() => setModalOpen(true)}
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>
-
-                    New
-                </span>
-
-            </button>
-            {/* <pre>{JSON.stringify(repoDetails, null, 2)}</pre> */}
-
-
-
-            <Modal
-                isOpen={modalOpen}
-                style={customStyles}
-                onRequestClose={() => setModalOpen(false)}
-            ><div className={s.modalContent}>
-
-                    <button
-                        className={s.btn_close}
-                        onClick={() => setModalOpen(false)}
-                    >Close</button>
-                    <div
-                        className={s.heading}
-                    >Create new repo</div>
-                    <Formik
-                        initialValues={repoDetails}
-                        validationSchema={newRepoSchema}
-                        // onSubmit={values => alert(JSON.stringify(values, null, 2))}
-                        onSubmit={(
-                            values,
-                            { setSubmitting, resetForm }
-                        ) => {
-                            console.log(values)
-                            setRepoDetails(values)
-                            createRepo().then((res) => {
+                <Modal
+                    isOpen={modalOpen}
+                    style={customStyles}
+                    onRequestClose={() => setModalOpen(false)}
+                ><div className={s.modalContent}>
+                        <button
+                            className={s.btn_close}
+                            onClick={() => setModalOpen(false)}
+                        >Close</button>
+                        <div
+                            className={s.heading}
+                        >Create new repo</div>
+                        <Formik
+                            initialValues={repoDetails}
+                            validationSchema={newRepoSchema}
+                            // onSubmit={values => alert(JSON.stringify(values, null, 2))}
+                            onSubmit={(
+                                values,
+                                { setSubmitting, resetForm }
+                            ) => {
+                                console.log(values)
+                                setRepoDetails(values)
+                                createRepo().then((res) => {
                                     // console.log("%c 👎: res ",
                                     //     "font-size:16px;background-color:#5c30b5;color:white;",
                                     //     res)
-                                setSubmitting(false)
-                                resetForm()
-                                setModalOpen(false)
-                                router.push(`/repositories/${res.data.createRepository.repository.name}?owner=${res.data.createRepository.repository.owner.login}`)
-                            }).catch((e: Error) => {
-                                setSubmitting(false)
-                                setSubmissionError(e.message)
+                                    setSubmitting(false)
+                                    resetForm()
+                                    setModalOpen(false)
+                                    router.push(`/repositories/${res.data.createRepository.repository.name}?owner=${res.data.createRepository.repository.owner.login}`)
+                                }).catch((e: Error) => {
+                                    setSubmitting(false)
+                                    setSubmissionError(e.message)
                                     // console.log(e.message)
-                            })
-                        }}
+                                })
+                            }}
+                        >
+                            {({
+                                values,
+                                errors,
+                                touched,
+                                handleChange,
+                                handleBlur,
+                                handleSubmit,
+                                isSubmitting,
+                                resetForm,
+                                /* and other goodies */
+                            }) => (
+                                <FForm
+                                    // className={styles.form}
+                                    // style={{ gridColumn: columns || {} }}
+                                    onSubmit={handleSubmit}
+                                >
+                                    <p className={s.label}>Name</p>
+                                    <p
+                                        className={s.error}
+                                    >
+                                        {errors.name &&
+                                            touched.name &&
+                                            errors.name}
+                                    </p>
+                                    <Field
+                                        // className={`${errors.name &&
+                                        //         touched.name &&
+                                        //         errors.name
+                                        //         ? styles.errorField
+                                        //         : ''
+                                        //     }`}
+                                        type='text'
+                                        placeholder='Name'
+                                        name='name'
+                                        id=''
+                                        onChange={handleChange}
+                                        value={values.name}
+                                    />
+                                    <p className={s.label}>Visibility</p>
+                                    <p >
+                                        {errors.visibility &&
+                                            touched.visibility &&
+                                            errors.visibility}
+                                    </p>
+                                    <Field as="select" name="visibility" onChange={handleChange}>
+                                        <option value="PUBLIC">PUBLIC</option>
+                                        <option value="PRIVATE">PRIVATE</option>
+                                        <option value="INTERNAL">INTERNAL</option>
+                                    </Field>
+                                    <p className={s.label}>Description</p>
+                                    <p
+                                        className={s.error}
+                                    >
+                                        {errors.description &&
+                                            touched.description &&
+                                            errors.description}
+                                    </p>
+                                    <Field as="textarea"
+                                        name="description"
+                                        onChange={handleChange} />
+                                    <button
+                                        disabled={isSubmitting}
+                                        type="submit">Submit</button>
+                                </FForm>
+                            )}</Formik>
+                    </div>
+                    <Modal
+                        isOpen={submissionError !== ''}
+                        style={customStyles}
+                        onRequestClose={() => setSubmissionError('')}
                     >
-                        {({
-                            values,
-                            errors,
-                            touched,
-                            handleChange,
-                            handleBlur,
-                            handleSubmit,
-                            isSubmitting,
-                            resetForm,
-                            /* and other goodies */
-                        }) => (
-                            <FForm
-                                // className={styles.form}
-                                // style={{ gridColumn: columns || {} }}
-                                onSubmit={handleSubmit}
-                            >
-                                <p className={s.label}>Name</p>
-                                <p
-                                    className={s.error}
-                                >
-                                    {errors.name &&
-                                        touched.name &&
-                                        errors.name}
-                                </p>
-                                <Field
-                                    // className={`${errors.name &&
-                                    //         touched.name &&
-                                    //         errors.name
-                                    //         ? styles.errorField
-                                    //         : ''
-                                    //     }`}
-                                    type='text'
-                                    placeholder='Name'
-                                    name='name'
-                                    id=''
-                                    onChange={handleChange}
-                                    value={values.name}
-                                />
-                                <p className={s.label}>Visibility</p>
-                                <p >
-                                    {errors.visibility &&
-                                        touched.visibility &&
-                                        errors.visibility}
-                                </p>
-                                <Field as="select" name="visibility" onChange={handleChange}>
-                                    <option value="PUBLIC">PUBLIC</option>
-                                    <option value="PRIVATE">PRIVATE</option>
-                                    <option value="INTERNAL">INTERNAL</option>
-                                </Field>
-                                <p className={s.label}>Description</p>
-                                <p
-                                    className={s.error}
-                                >
-                                    {errors.description &&
-                                        touched.description &&
-                                        errors.description}
-                                </p>
-                                <Field as="textarea"
-                                    name="description"
-                                    onChange={handleChange} />
-
-                                <button
-                                    disabled={isSubmitting}
-                                    type="submit">Submit</button>
-                            </FForm>
-                        )}</Formik>
-                </div>
-
-                <Modal
-                    isOpen={submissionError !== ''}
-                    style={customStyles}
-                    onRequestClose={() => setSubmissionError('')}
-
-                >
                         <p>submission Error!</p>
-                    <p>{JSON.stringify(submissionError, null, 2)}</p>
-                    <button
-                        className={s.error_close}
+                        <p>{JSON.stringify(submissionError, null, 2)}</p>
+                        <button
+                            className={s.error_close}
                             onClick={() => {
-
                                 setSubmissionError('')
                             }}
                         >Dismiss</button>
-
+                    </Modal>
                 </Modal>
-
-            </Modal>
+            </>}
 
         </div>
     )

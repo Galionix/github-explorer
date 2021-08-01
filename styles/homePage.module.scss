@@ -1,9 +1,45 @@
-@import "@/styles/mixins";
+@import '@/styles/mixins';
 
-.layout{
-@include text-regular;
-@include main-layout;
+.layout {
+	@include text-regular;
+	@include main-layout;
 }
-.content{
-    grid-area: content;
+.content {
+                a{
+	@include link;
+            }
+	grid-area: content;
+	display: flex;
+	flex-direction: column;
+
+	.avatar {
+		display: flex;
+		justify-self: center;
+		margin: 0 auto;
+		svg {
+			height: min-content;
+			width: 20px;
+			top: 0;
+		}
+		img {
+			width: 50px;
+			border-radius: 50%;
+		}
+	}
+    ul{
+        margin: 0 auto;
+        li{
+            display: block;
+
+        }
+    }
+}
+.go{
+    // justify-self: center;
+    margin: 0 auto;
+    font-size: 48px;
+    font-weight: bold;
+    &:hover{
+        color: $green !important;
+    }
 }

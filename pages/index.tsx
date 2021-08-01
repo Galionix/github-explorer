@@ -15,24 +15,9 @@ import { UserPanel } from './../src/components/UserPanel/UserPanel';
 import s from '@/styles/homePage.module.scss';
 
 export default function Home(data: any) {
-  // console.log("%c 💆‍♂️: Home -> data ",
-  //   "font-size:16px;background-color:#f9e161;color:black;",
-  //   data)
-  // const router = useRouter()
 
-  // const token =
-  //   useTokenStore((state) => state.token);
-  // const setTokenInStore =
-  //   useTokenStore((state) => state.setToken);
-  // const signOut = (event: React.MouseEvent<HTMLElement>) => {
-  //   setTokenInStore('')
-  //   // router.push('/auth/sign-in')
-  // }
-
-  // const [session, loading] = useSession();
   const user =
     useUserStore((state) => state.user);
-  // console.log("%c 🇫🇷: Home -> user ", "font-size:16px;background-color:#73ca34;color:white;", user)
 
   const [repos, setRepos] = useState({
     total_count: 0,
@@ -46,7 +31,6 @@ export default function Home(data: any) {
 
     }]
   })
-  // const [repos, setRepos] = useState([])
   useEffect(() => {
 
 
@@ -85,7 +69,9 @@ export default function Home(data: any) {
         <Link
           href='/repositories/'
         >
-          <a >Browse repositories</a>
+                <a
+                  className={s.go}
+                >Browse repositories</a>
         </Link>
 
             </> : <>
@@ -93,30 +79,44 @@ export default function Home(data: any) {
               >
               Hello, user! Please sign-in to browse.
             </h1>
-              <SignButton />
+              {/* <SignButton /> */}
 
             </>
-          }</div>
-        {
-          repos.total_count > 0 && <div>
-            <p>{`This app was created by `}
+          }            <h2>{`This app was created by `}
               <Link
                 href="https://github.com/Galionix"
               >
                 <a
                   target="_blank"
                 >
-                  {repos.items[0].owner.login}
+                Galionix
 
                 </a>
               </Link>
-              {` for archicgi`}</p>
-            <Image
-              src={repos.items[0].owner.avatar_url}
-              width={50}
-              height={50}
-            />
-            <p>Here are my latest projects:</p>
+            {` for archicgi`}</h2>
+          {
+            repos.total_count > 0 && <>
+              <div
+
+
+                className={s.avatar}
+              >
+                <Image
+                  src={repos.items[0].owner.avatar_url}
+                  width={50}
+                  height={50}
+                  layout='fixed'
+                />
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="tomato"
+                >
+                  <path fillRule="evenodd"
+                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <p>Check out my latest projects:</p>
             <ul>
 
               {
@@ -139,38 +139,14 @@ export default function Home(data: any) {
 
                 ))
               }
-            </ul>
-          </div>
-        }
-        {/* <pre>{JSON.stringify(repos, null, 2)}</pre> */}
-
-        {/* <h1>{token || 'No token set.'}</h1> */}
-        {/* {
-          token && <>
-            <p>Welcome back!</p>
-            <button
-              onClick={() => router.push('/repositories')}
-
-            >Browse repositories</button>
-            <button type="reset"
-              onClick={signOut}
-            >Sign Out</button>
+              </ul>
           </>
         }
-        {
-          !token && <>
-            <p>Greetings! Start using explorer by logging in!</p>
-            <button
-              onClick={() => router.push('/auth/sign-in')}
-
-            >Sign-in</button>
-          </>
-        } */}
+        </div>
 
       </main>
-      <footer  >
 
-      </footer>
+
     </>
   )
 }

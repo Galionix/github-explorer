@@ -15,48 +15,50 @@
 	}
 }
 
-@mixin main-layout{
-    display: grid;
-    grid-template-columns:  [panel] 1fr [content] 8fr;
-    grid-auto-rows: 
-    [content] 1fr
-    [footer] auto
-
-    
-    ;
+@mixin main-layout {
+	min-height: 80vh;
+	display: grid;
+	grid-template-columns: [panel] 1fr [content] 8fr;
+	grid-template-rows:
+		[content] 1fr
+		[footer] auto;
 }
-
 
 @mixin btn {
-
-    cursor: pointer;
-    @include text-regular;
-    background: $green;
-     color: white;
-     padding: 5px 20px;
-     border: 1px solid $gray5;
-     border-radius: 5px;
-     font-weight: bold;
-     &:hover{
-		background:$green5;
-     }
-
+	cursor: pointer;
+	@include text-regular;
+	background: $green;
+	color: white;
+	padding: 5px 20px;
+	border: 1px solid $gray5;
+	border-radius: 5px;
+	font-weight: bold;
+	&:hover {
+		background: $green5;
+	}
 }
 
-
 @mixin btn-disabled {
-     
+	cursor: pointer;
+	@include text-regular;
+	font-weight: bold;
+	background: $dark;
+	color: white;
+	padding: 5px 20px;
+	border: 1px solid $gray5;
+	border-radius: 5px;
+	&:hover {
+		background: $green5;
+	}
+}
 
-    cursor: pointer;
-    @include text-regular;
-    font-weight: bold;
-    background: $dark;
-     color: white;
-     padding: 5px 20px;
-     border: 1px solid $gray5;
-     border-radius: 5px;
-     &:hover{
-		background:$green5;
-     }
-
+@mixin link {
+	text-decoration: none;
+	color: $green;
+	&:visited {
+		color: $green50;
+	}
+	&:hover {
+		color: $dark;
+	}
 }
