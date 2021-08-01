@@ -507,125 +507,158 @@ export default function Repositories({
                     className={` ${s.controls} `}
 
                 >
-                    <input
-                        className={` ${s.control} `}
+                    <div
+                        className={` ${s.controlGroup} `}
 
-                        type='text'
-                        value={ownerFilter}
-                        placeholder='Owner'
-                        onChange={e => {
-                            setPageInfo({
-                                endCursor: '',
-                                startCursor: '',
-                                hasNextPage: false,
-                                hasPreviousPage: false,
-                            })
-                            // if (e.target.value === '')
-                            // {
-                            setOwnerFilter(e.target.value)
-                            // }
-                        }}
-                    />
-                    <input
-                        className={` ${s.control} `}
-                        type='text'
-                        placeholder='Repo name'
-                        value={repoNameSearch}
-                        onChange={e => {
-                            setPageInfo({
-                                endCursor: '',
-                                startCursor: '',
-                                hasNextPage: false,
-                                hasPreviousPage: false,
-                            })
-                            setRepoNameSearch(e.target.value)
-                        }}
-                    />
-                    <select
-                        className={` ${s.control} `}
-                        key='select_pageSize'
-                        name=''
-                        id=''
-                        disabled={
-                            loading ||
-                            (repoNameSearch !== '' && !globalSearch)
-                        }
-                        value={pageSize}
-                        onChange={e => {
-                            setPageInfo({
-                                endCursor: '',
-                                startCursor: '',
-                                hasNextPage: false,
-                                hasPreviousPage: false,
-                            })
-                            setPageSize(parseInt(e.target.value))
-                            // setPage(1)
-                        }}
                     >
-                        <option value='5'>5</option>
-                        <option value='10'>10</option>
-                        <option value='20'>20</option>
-                        <option value='50'>50</option>
-                        <option value='100'>100</option>
-                    </select>
-                    <select
-                        className={` ${s.control} `}
-                        name=''
-                        id=''
-                        key='select_sortingField'
-                        value={sortingField}
-                        disabled={
-                            loading || repoNameSearch !== ''
-                        }
-                        onChange={e => {
-                            setPageInfo({
-                                endCursor: '',
-                                startCursor: '',
-                                hasNextPage: false,
-                                hasPreviousPage: false,
-                            })
-                                        // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
-                            setSortingField(e.target.value)
-                        }}
+                        <p>Owner Search</p>
+                        <input
+                            className={` ${s.control} `}
+                            type='text'
+                            value={ownerFilter}
+                            placeholder='Owner'
+                            onChange={e => {
+                                setPageInfo({
+                                    endCursor: '',
+                                    startCursor: '',
+                                    hasNextPage: false,
+                                    hasPreviousPage: false,
+                                })
+                                // if (e.target.value === '')
+                                // {
+                                setOwnerFilter(e.target.value)
+                                // }
+                            }}
+                        />
+                    </div>
+                    <div
+                        className={` ${s.controlGroup} `}
+
                     >
-                        <option value='STARGAZERS'>
-                            STARGAZERS
-                        </option>
-                        <option value='CREATED_AT'>
-                            CREATED_AT
-                        </option>
-                        <option value='UPDATED_AT'>
-                            UPDATED_AT
-                        </option>
-                        <option value='PUSHED_AT'>
-                            PUSHED_AT
-                        </option>
-                        <option value='NAME'>NAME</option>
-                    </select>
-                    <select
-                        className={` ${s.control} `}
-                        name=''
-                        id=''
-                        key='select_orderDirection'
-                        value={orderDirection}
-                        disabled={
-                            loading || repoNameSearch !== ''
-                        }
-                        onChange={e => {
-                            setPageInfo({
-                                endCursor: '',
-                                startCursor: '',
-                                hasNextPage: false,
-                                hasPreviousPage: false,
-                            })
-                            setOrderDirection(e.target.value)
-                            // setPage(1)
-                            // setPageSize(parseInt(e.target.value))
-                        }}
+                        <p>Repo search/filter</p>
+
+                        <input
+                            className={` ${s.control} `}
+                            type='text'
+                            placeholder='Repo name'
+                            value={repoNameSearch}
+                            onChange={e => {
+                                setPageInfo({
+                                    endCursor: '',
+                                    startCursor: '',
+                                    hasNextPage: false,
+                                    hasPreviousPage: false,
+                                })
+                                setRepoNameSearch(e.target.value)
+                            }}
+                        />
+                    </div>
+                    <div
+                        className={` ${s.controlGroup} `}
+
                     >
-                        <option value='DESC'>DESC</option>
-                        <option value='ASC'>ASC</option>
-                    </select>
+                        <p>Page size</p>
+
+                        <select
+                            className={` ${s.control} `}
+                            key='select_pageSize'
+                            name=''
+                            id=''
+                            disabled={
+                                loading ||
+                                (repoNameSearch !== '' && !globalSearch)
+                            }
+                            value={pageSize}
+                            onChange={e => {
+                                setPageInfo({
+                                    endCursor: '',
+                                    startCursor: '',
+                                    hasNextPage: false,
+                                    hasPreviousPage: false,
+                                })
+                                setPageSize(parseInt(e.target.value))
+                                // setPage(1)
+                            }}
+                        >
+                            <option value='5'>5</option>
+                            <option value='10'>10</option>
+                            <option value='20'>20</option>
+                            <option value='50'>50</option>
+                            <option value='100'>100</option>
+                        </select>
+                    </div>
+                    <div
+                        className={` ${s.controlGroup} `}
+
+                    >
+                        <p>Sort by</p>
+
+                        <select
+                            className={` ${s.control} `}
+                            name=''
+                            id=''
+                            key='select_sortingField'
+                            value={sortingField}
+                            disabled={
+                                loading || repoNameSearch !== ''
+                            }
+                            onChange={e => {
+                                setPageInfo({
+                                    endCursor: '',
+                                    startCursor: '',
+                                    hasNextPage: false,
+                                    hasPreviousPage: false,
+                                })
+                                // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
+                                setSortingField(e.target.value)
+                            }}
+                        >
+                            <option value='STARGAZERS'>
+                                STARGAZERS
+                            </option>
+                            <option value='CREATED_AT'>
+                                CREATED_AT
+                            </option>
+                            <option value='UPDATED_AT'>
+                                UPDATED_AT
+                            </option>
+                            <option value='PUSHED_AT'>
+                                PUSHED_AT
+                            </option>
+                            <option value='NAME'>NAME</option>
+                        </select>
+                    </div>
+                    <div
+                        className={` ${s.controlGroup} `}
+
+                    >
+                        <p>Direction</p>
+
+                        <select
+                            className={` ${s.control} `}
+                            name=''
+                            id=''
+                            key='select_orderDirection'
+                            value={orderDirection}
+                            disabled={
+                                loading || repoNameSearch !== ''
+                            }
+                            onChange={e => {
+                                setPageInfo({
+                                    endCursor: '',
+                                    startCursor: '',
+                                    hasNextPage: false,
+                                    hasPreviousPage: false,
+                                })
+                                setOrderDirection(e.target.value)
+                                // setPage(1)
+                                // setPageSize(parseInt(e.target.value))
+                            }}
+                        >
+                            <option value='DESC'>DESC</option>
+                            <option value='ASC'>ASC</option>
+                        </select>
+                    </div>
                 </div>
                 {repos.length > 0 && user && (
                     <>
@@ -668,7 +701,7 @@ export default function Repositories({
                         >
                             <p>{`Total count: ${generalData.totalCount}`}</p>
                             {
-                                globalSearch || <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)} (${generalData.totalDiskUsage})`}</p>
+                                globalSearch || <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)}`}</p>
                             }
                         </div>
 
