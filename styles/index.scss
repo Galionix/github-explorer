@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200&family=Pacifico&family=Poiret+One&family=Russo+One&family=Viaoda+Libre&display=swap');
-
+@import '@/styles/mixins';
+@import '@/styles/vars';
 
 *,*::after,*::before {
   box-sizing: border-box;
@@ -14,3 +15,20 @@ body,ul {
 
 
   }
+
+  		input,
+		select,
+		textarea {
+			margin: 2px;
+			border-radius: 5px;
+			border: 1px dashed $gray5;
+			&:hover {
+				border: 1px solid $dark;
+			}
+		}
+		textarea {
+			padding: 10px;
+		}
+		select {
+			cursor: pointer;
+		}

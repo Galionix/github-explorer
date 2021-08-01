@@ -1,0 +1,36 @@
+@import '@/styles/mixins';
+@import '@/styles/vars';
+
+.footer{
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: repeat(5,1fr );
+    row-gap: 25px;
+    padding-bottom: 40px;
+    svg{
+        color: $gray5;
+        grid-column: 2/ -2;
+        width: min-content;
+        justify-self: center;
+        @media screen and (max-width: 767px) {
+         
+
+                max-width: 90vw;
+           
+        }
+    }
+    ul{
+        grid-column: 2/-2;
+        grid-row: 2;
+        display: flex;
+        justify-content: space-evenly;
+        li{
+            display: block;
+            a{
+
+                @include link;
+                @include text-regular;
+            }
+        }
+    }
+}

@@ -16,7 +16,7 @@ import {
     useEffect,
     useMemo,
 } from 'react'
-
+import s from '@/styles/reposPage.module.scss'
 import { useState } from 'react'
 // import Header from '@/components/Header/Header';
 
@@ -49,6 +49,9 @@ import { SEARCH_NEXT } from './../../utils/queries/reposQueries'
 import { formatBytes } from './../../utils/utils';
 import { UserPanel } from './../../src/components/UserPanel/UserPanel';
 import Link from 'next/link';
+import Head from 'next/head';
+
+const no_repos_message = 'No repos.'
 
 export default function Repositories({
     client,
@@ -130,6 +133,11 @@ export default function Repositories({
             hasNextPage: false,
             hasPreviousPage: false,
         })
+        setGeneralData({
+
+            totalCount: 0,
+            totalDiskUsage: 0
+        })
         setError(e.message)
         setLoading(false)
     }
@@ -157,9 +165,9 @@ export default function Repositories({
                         setRepoData({ res, repoNameSearch })
                     } else {
                         handleDownloadError({
-                            message: 'No repos found',
+                            message: no_repos_message,
                         })
-                        setError('No repos found')
+                        // setError('No repos found')
                     }
                 })
                 .catch(handleDownloadError).finally(() => setLoading(false))
@@ -187,7 +195,7 @@ export default function Repositories({
                         })
                     } else {
                         handleDownloadError({
-                            message: 'No repos found',
+                            message: no_repos_message,
                         })
                         // setError('No repos found')
                     }
@@ -217,9 +225,9 @@ export default function Repositories({
                         setRepoData({ res, repoNameSearch })
                     } else {
                         handleDownloadError({
-                            message: 'No repos found',
+                            message: no_repos_message,
                         })
-                        setError('No repos found')
+                        // setError('No repos found')
                     }
                 })
                 .catch(handleDownloadError).finally(() => setLoading(false))
@@ -247,7 +255,7 @@ export default function Repositories({
                         })
                     } else {
                         handleDownloadError({
-                            message: 'No repos found',
+                            message: no_repos_message,
                         })
                         // setError('No repos found')
                     }
@@ -425,7 +433,7 @@ export default function Repositories({
                             setRepoData({ res, repoNameSearch })
                         } else
                             handleDownloadError({
-                                message: 'No repos found',
+                                message: no_repos_message,
                             })
                     })
                     .catch(handleDownloadError)
@@ -466,7 +474,7 @@ export default function Repositories({
                             })
                         } else {
                             handleDownloadError({
-                                message: 'no repos',
+                                message: no_repos_message,
                             })
                         }
                     })
@@ -478,163 +486,172 @@ export default function Repositories({
     )
 
     return (
-        <div>
-            {user ? <div>
-                <UserPanel />
-                <h1  >
-                    {`Hello, ${user.name}!`}
-                </h1>
+        <div
+            className={s.layout}
+        >
 
-            </div>
-                : <div>
-                    <h1  >
-                        Hello, user! Please sign-in to browse.
-                    </h1>
-                    <SignButton />
-                </div>
+            <Head>
+                <title>Github explorer | Browse!</title>
+                <meta name="description"
+                    content="App for browsing github repos" />
+                <link rel="icon"
+                    href="/favicon.ico" />
+            </Head>
+            <UserPanel />
 
-            }
-            <Link
-                href='/'
-            >
-                <a >Home</a>
-            </Link>
-            {/* <pre>
-                {JSON.stringify(
-                    {
-                        user,
-                        ownerFilter,
-                        pageSize,
-                        orderDirection,
-                        sortingField,
-                        repoNameSearch,
-                    },
-                    null,
-                    2
-                )}
-            </pre> */}
-            {error && <p>{error}</p>}
-            <input
-                type='text'
-                value={ownerFilter}
-                placeholder='Owner'
-                onChange={e => {
-                    // if (e.target.value === '')
+            <div
+                className={` ${s.content} `}
 
-                    // {
-                    setOwnerFilter(e.target.value)
-                    // }
-                }}
-            />
-            <input
-                type='text'
-                placeholder='Repo name'
-                value={repoNameSearch}
-                onChange={e => {
-                    setRepoNameSearch(e.target.value)
-                }}
-            />
-            <select
-                key='select_pageSize'
-                name=''
-                id=''
-                disabled={
-                    loading ||
-                    (repoNameSearch !== '' && !globalSearch)
-                }
-                value={pageSize}
-                onChange={e => {
-                    // setPage(1)
-                    setPageSize(parseInt(e.target.value))
-                }}
             >
-                <option value='5'>5</option>
-                <option value='10'>10</option>
-                <option value='20'>20</option>
-                <option value='50'>50</option>
-                <option value='100'>100</option>
-            </select>
-            <select
-                name=''
-                id=''
-                key='select_sortingField'
-                value={sortingField}
-                disabled={
-                    loading || repoNameSearch !== ''
-                }
-                onChange={e => {
-					// console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
 
-                    setSortingField(e.target.value)
-                }}
-            >
-                <option value='STARGAZERS'>
-                    STARGAZERS
-                </option>
-                <option value='CREATED_AT'>
-                    CREATED_AT
-                </option>
-                <option value='UPDATED_AT'>
-                    UPDATED_AT
-                </option>
-                <option value='PUSHED_AT'>
-                    PUSHED_AT
-                </option>
-                <option value='NAME'>NAME</option>
-            </select>
-            <select
-                name=''
-                id=''
-                key='select_orderDirection'
-                value={orderDirection}
-                disabled={
-                    loading || repoNameSearch !== ''
-                }
-                onChange={e => {
-                    setOrderDirection(e.target.value)
-                    // setPage(1)
-                    // setPageSize(parseInt(e.target.value))
-                }}
-            >
-                <option value='DESC'>DESC</option>
-                <option value='ASC'>ASC</option>
-            </select>
-            {repos && user ? (
-                <>
-                    <Table data={data} loading={loading} />
-                </>
-            ) : (
-                <p>No repos</p>
-            )}
-            {pageInfo.hasNextPage && (
-                <button
-                    disabled={
-                        !pageInfo.hasNextPage || loading
-                    }
-                    onClick={nextPage}
+                {error && <p
+                    className={` ${s.error} `}
+
+                >{error}</p>}
+
+                <div
+                    className={` ${s.controls} `}
+
                 >
-                    Next page
-                </button>
-            )}
-            <div>
-                {
-                    globalSearch || <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)} (${generalData.totalDiskUsage})`}</p>
-                }
-                <p>{`Total count: ${generalData.totalCount}`}</p>
+                    <input
+                        className={` ${s.control} `}
+
+                        type='text'
+                        value={ownerFilter}
+                        placeholder='Owner'
+                        onChange={e => {
+                            // if (e.target.value === '')
+                            // {
+                            setOwnerFilter(e.target.value)
+                            // }
+                        }}
+                    />
+                    <input
+                        className={` ${s.control} `}
+                        type='text'
+                        placeholder='Repo name'
+                        value={repoNameSearch}
+                        onChange={e => {
+                            setRepoNameSearch(e.target.value)
+                        }}
+                    />
+                    <select
+                        className={` ${s.control} `}
+                        key='select_pageSize'
+                        name=''
+                        id=''
+                        disabled={
+                            loading ||
+                            (repoNameSearch !== '' && !globalSearch)
+                        }
+                        value={pageSize}
+                        onChange={e => {
+                            // setPage(1)
+                            setPageSize(parseInt(e.target.value))
+                        }}
+                    >
+                        <option value='5'>5</option>
+                        <option value='10'>10</option>
+                        <option value='20'>20</option>
+                        <option value='50'>50</option>
+                        <option value='100'>100</option>
+                    </select>
+                    <select
+                        className={` ${s.control} `}
+                        name=''
+                        id=''
+                        key='select_sortingField'
+                        value={sortingField}
+                        disabled={
+                            loading || repoNameSearch !== ''
+                        }
+                        onChange={e => {
+                                        // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
+                            setSortingField(e.target.value)
+                        }}
+                    >
+                        <option value='STARGAZERS'>
+                            STARGAZERS
+                        </option>
+                        <option value='CREATED_AT'>
+                            CREATED_AT
+                        </option>
+                        <option value='UPDATED_AT'>
+                            UPDATED_AT
+                        </option>
+                        <option value='PUSHED_AT'>
+                            PUSHED_AT
+                        </option>
+                        <option value='NAME'>NAME</option>
+                    </select>
+                    <select
+                        className={` ${s.control} `}
+                        name=''
+                        id=''
+                        key='select_orderDirection'
+                        value={orderDirection}
+                        disabled={
+                            loading || repoNameSearch !== ''
+                        }
+                        onChange={e => {
+                            setOrderDirection(e.target.value)
+                            // setPage(1)
+                            // setPageSize(parseInt(e.target.value))
+                        }}
+                    >
+                        <option value='DESC'>DESC</option>
+                        <option value='ASC'>ASC</option>
+                    </select>
+                </div>
+                {repos.length > 0 && user && (
+                    <>
+                        <Table data={data} loading={loading} />
+                        {/* <pre>{JSON.stringify(pageInfo, null, 2)}</pre> */}
+                        <div
+                            className={` ${s.buttonGroup} `}
+
+                        >
+                            {pageInfo.hasPreviousPage &&
+                                <button
+                                    className={` ${s.prev} `}
+                                    disabled={!pageInfo.hasPreviousPage || loading}
+                                    onClick={() => {
+                                        setTimeout(
+                                            prevPage, 100)
+                                    }}
+                                >Previous page</button>}
+                            {pageInfo.hasNextPage && (
+                                <button
+                                    className={` ${s.next} `}
+                                    disabled={
+                                        !pageInfo.hasNextPage || loading
+                                    }
+                                    onClick={nextPage}
+                                >
+                                    Next page
+                                </button>
+                            )}
+                        </div>
+                        <div
+                            className={` ${s.pagingInfo} `}
+
+                        >   <p>Current page : {page}</p>
+                            <p>Total pages : {(Math.ceil(generalData.totalCount / pageSize))}</p>
+                        </div>
+                        <div
+                            className={` ${s.total} `}
+
+                        >
+                            <p>{`Total count: ${generalData.totalCount}`}</p>
+                            {
+                                globalSearch || <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)} (${generalData.totalDiskUsage})`}</p>
+                            }
+                        </div>
+
+                    </>
+                )}
+
             </div>
-            <p>Current page : {page}</p>
-            <p>Total pages : {(Math.ceil(generalData.totalCount / pageSize))}</p>
-            {pageInfo.hasPreviousPage &&
-                <button
-                    disabled={!pageInfo.hasPreviousPage || loading}
-                    onClick={() => {
-
-                        setTimeout(
-                            prevPage, 100)
-
-
-                    }}
-                >Previous page</button>}
 
             {/* <pre>
                 {JSON.stringify(pageInfo, null, 2)}

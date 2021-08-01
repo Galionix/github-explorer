@@ -16,12 +16,19 @@
 }
 
 @mixin main-layout {
-	min-height: 80vh;
+	min-height: calc(100vh - 60px);
 	display: grid;
 	grid-template-columns: [panel] 1fr [content] 8fr;
 	grid-template-rows:
 		[content] 1fr
 		[footer] auto;
+        @media screen and (max-width: 767px) {
+            grid-template-columns:[content] 1fr;
+            	grid-template-rows:
+                [panel] auto
+		[content] 1fr
+		[footer] auto;
+        }
 }
 
 @mixin btn {
@@ -36,6 +43,9 @@
 	&:hover {
 		background: $green5;
 	}
+    &:disabled{
+        background: $gray5;
+    }
 }
 
 @mixin btn-disabled {

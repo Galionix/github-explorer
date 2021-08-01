@@ -1,3 +1,67 @@
-.avatar{
-    border-radius: 50%;
+@import '@/styles/mixins';
+
+.avatar {
+	// border-radius: 50%;
+	img {
+		// width: 10px !important;
+	}
+}
+
+.external {
+	svg {
+		margin: 10px;
+		max-width: 20px;
+	}
+}
+.owner {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	.ownerImage {
+		img {
+			border-radius: 50%;
+		}
+
+		width: 70px;
+		@media screen and (max-width: 767px) {
+			width: clamp(10px, 5vw, 70px);
+		}
+	}
+}
+.table {
+	th {
+		@media screen and (max-width: 767px) {
+			font-size: clamp(10px, 2vw, 30px);
+		}
+	}
+	// margin: 0;
+	width: 100%;
+	a {
+		@include link;
+		font-weight: bold;
+	}
+	border: none;
+	border-collapse: collapse;
+	td {
+		//  display: grid;
+		border-left: 1px dashed $gray5;
+		& > * {
+			padding: 0 10px;
+			@media screen and (max-width: 767px) {
+				font-size: clamp(10px, 2vw, 30px);
+				padding: 0;
+			}
+			margin: 0 auto;
+
+			// width: min-content;
+			text-align: center;
+			// place-self: center;
+			//    width: min-content;
+			//    margin: 0 auto;
+			// background-color:red;
+		}
+	}
+	td:first-child {
+		border-left: none;
+	}
 }

@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { Session } from '@/ts/interfaces';
 import '@/styles/index.scss'
 import { Navigation } from './../src/components/Nav/Navigation';
+import { Footer } from './../src/components/Footer/Footer';
 
 
 
@@ -145,7 +146,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <Navigation />
       <Component {...pageProps} client={client} />
-
+      <Footer />
     </ApolloProvider>
   </AuthProvider>
 }

@@ -23,6 +23,7 @@ const customStyles = {
         // display: 'flex',
         // flexDirection: 'column',
     },
+    overlay: { zIndex: 1000 }
 };
 
 
@@ -91,12 +92,14 @@ export const UserPanel = () => {
         <div
             className={s.panel}
         >{user && <>
+                <div className={s.image}>
 
             <Image
                 src={user?.picture || '/1476.gif'}
                 width={90}
                 height={90}
-            />
+                    />
+                </div>
             <p
                 className={` ${s.login} `}
                 >{user?.login}</p>

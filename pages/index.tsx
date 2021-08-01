@@ -122,7 +122,7 @@ export default function Home(data: any) {
               {
 
 
-                repos.items.map(({ name, html_url }, i) => (
+                  repos.items.map(({ name, html_url }, i) => (
                   <li
                     key={i}
                   >
@@ -134,7 +134,8 @@ export default function Home(data: any) {
 
                         {name}
                       </a>
-                    </Link>
+                      </Link>
+                      <p> </p>
                   </li>
 
                 ))

@@ -12,9 +12,15 @@ import { StarButton } from './../../src/components/Table/StarButton';
 import Image from 'next/image';
 import { useRouter } from 'next/router'
 import { UserPanel } from './../../src/components/UserPanel/UserPanel';
+import s from '@/styles/detailsPage.module.scss'
+import { formatBytes } from './../../utils/utils';
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+import Head from 'next/head';
 
 
-
+TimeAgo.addDefaultLocale(en)
+const timeAgo = new TimeAgo('en-US')
 
 
 const Repository = ({
@@ -102,44 +108,95 @@ const Repository = ({
     }, [client, router.query.repository, router.query.owner])
 
     return (
-        <div>
+        <div
+            className={s.layout}
+        >
+            <Head>
+                <title>Github explorer | {`${router.query.owner}'s ${router.query.repository}`}</title>
+                <meta name="description"
+                    content="App for browsing github repos" />
+                <link rel="icon"
+                    href="/favicon.ico" />
+            </Head>
             <UserPanel />
-            <p>Selected repository: {repoData.name} {repoData.owner.login}</p>
-            <Link
-                href={'/repositories'}
-            ><a
+            <div
+                className={` ${s.content} `}
+            >
+                {/* <p>Selected repository: {repoData.name} {repoData.owner.login}</p> */}
 
-            >Back</a></Link>
-            <Link
-                href={`https://github.com/${repoData.owner.login}/${repoData.name}/`}
-            ><a
-                target="_blank"
-                >Repo Url</a></Link>
-            {/* <pre>{JSON.stringify(repoData, null, 2)}</pre> */}
-            <div>{repoData?.object?.text ? repoData.object.text : 'No master:README.md'}</div>
-            <div>{repoData.diskUsage}</div>
-            <div>{repoData.name}</div>
-            <div>{repoData.owner.login}</div>
+                <Link
+                    href={`/repositories/`}
+                ><a
+                        className={` ${s.back} `}
 
-            <Image
-                src={repoData.owner.avatarUrl || '/1476.gif'}
-                width={90}
-                height={90}
-            />
-            <div>{repoData.owner.avatarUrl}</div>
-            <div>{repoData.description}</div>
-            <div>{repoData.createdAt}</div>
-            <div>{repoData.updatedAt}</div>
-            <StarButton
-                value={stars}
-                id={repoData.id}
-                globalLoading={false}
-                starred={repoData.viewerHasStarred}
+                    >                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg> <span>
+                            Back
+                        </span>
+                    </a></Link>
 
-            />
 
-            {/* <Header /> */}
-            {/* <h1>You&apos;re in!</h1> */}
+                <Link
+                    href={`https://github.com/${repoData.owner.login}/${repoData.name}/`}
+                ><a
+                        className={` ${s.external} `}
+
+                        target="_blank"
+                    >                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg></a></Link>
+
+                <h1
+                    className={` ${s.login} `}
+
+                >{repoData.owner.login}</h1>
+                <h2
+                    className={` ${s.name} `}
+
+                >{repoData.name}</h2>
+
+                <div
+
+                    className={s.avatar}
+                >
+                    <Image
+                        src={repoData.owner.avatarUrl || '/1476.gif'}
+                        width={300}
+                        height={300}
+                    />
+                </div>
+                {/* <div>{repoData.owner.avatarUrl}</div> */}
+                <div
+                    className={` ${s.description} `}
+
+                >{repoData.description}</div>
+                <div>{`Created: ${new Date(repoData.createdAt).toLocaleDateString()} (${timeAgo.format(new Date(repoData.createdAt))})`}</div>
+                <div
+                    className={` ${s.diskUsage} `}
+
+                >Disk usage: {formatBytes(repoData.diskUsage)}</div>
+                <div>Updated: {timeAgo.format(new Date(repoData.updatedAt))}</div>
+                <div
+                    className={` ${s.star} `}
+
+                >
+
+                    <StarButton
+                        value={stars}
+                        id={repoData.id}
+                        globalLoading={false}
+                        starred={repoData.viewerHasStarred}
+                    />
+                </div>
+
+                <div
+                    className={` ${s.htmlContent} `}
+
+                    dangerouslySetInnerHTML={{ __html: repoData?.object?.text ? repoData.object.text : 'No master:README.md' }} />
+            </div>
+
+
         </div>
     )
 }

@@ -40,7 +40,12 @@ export const Table = ({ data, loading }: TableProps) => {
     const columns: Column<Node>[] = useMemo(
         () => [
             {
-                Header: 'Repos',
+                Header: () => (
+                    <span >
+
+                    </span>
+                ),
+                id: 'someId',
                 columns: [
                     {
                         Header: 'Owner',
@@ -89,7 +94,10 @@ export const Table = ({ data, loading }: TableProps) => {
 
     // Render the UI for your table
     return (
-        <table {...getTableProps()}>
+        <table
+            className={` ${s.table} `}
+
+            {...getTableProps()}>
             <thead>
                 {headerGroups.map((headerGroup, i) => (
                     <tr
@@ -129,6 +137,7 @@ export const Table = ({ data, loading }: TableProps) => {
                                         {...cell.getCellProps()}
                                         key={l + '_cell'}
                                     >
+                                        <div>
 
                                         <Link
                                             href={
@@ -141,20 +150,25 @@ export const Table = ({ data, loading }: TableProps) => {
                                                 }}
                                         >
                                             <a
-                                                onClick={() => {
-                                                    setSelectedOwner(row.original.owner.login)
+
+                                                    onClick={() => {
+                                                        setSelectedOwner(row.original.owner.login)
                                                     setSelectedName(row.original.name)
                                                     // setSelectedRepo(row.original.id)
                                                 }}
-                                            >{cell.value}</a>
+                                                >{cell.value}</a>
                                         </Link>
                                         <Link
                                             href={cell.row.original.url}
-                                        ><a target="_blank" >
+                                            ><a
+                                                className={` ${s.external} `}
+
+                                                target="_blank" >
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                                 </svg>
                                             </a></Link>
+                                        </div>
                                     </td>)
                                 }
 
@@ -163,14 +177,27 @@ export const Table = ({ data, loading }: TableProps) => {
                                     return (<td
                                         {...cell.getCellProps()}
                                         key={l + '_cell'}
-                                    >
-                                        <Image
+                                        className={` ${s.owner} `}
 
+                                    >
+                                        <div
+                                            className={` ${s.ownerImage} `}
+
+                                        >
+
+                                        <Image
+                                                // layout='fill'
+                                                // objectFit="contain"
+                                            // layout="fill"
+                                            // objectFit="cover"
+                                            // layout="responsive"
+                                            // objectFit='fill'
                                             className={s.avatar}
                                             width={70}
                                             height={70}
                                             src={cell.value.avatarUrl}
-                                        />
+                                            />
+                                        </div>
                                         <span>{cell.value.login}</span>
 
                                     </td>
@@ -181,7 +208,7 @@ export const Table = ({ data, loading }: TableProps) => {
                                         {...cell.getCellProps()}
                                         key={l + '_cell'}
                                     >
-                                        <span>{formatBytes(cell.value)}</span>
+                                        <div>{formatBytes(cell.value)}</div>
 
                                     </td>
                                     )
@@ -192,7 +219,7 @@ export const Table = ({ data, loading }: TableProps) => {
                                         {...cell.getCellProps()}
                                         key={l + '_cell'}
                                     >
-                                        <span>{timeAgo.format(new Date(cell.value))}</span>
+                                        <div>{timeAgo.format(new Date(cell.value))}</div>
 
                                     </td>
                                     )
@@ -204,7 +231,7 @@ export const Table = ({ data, loading }: TableProps) => {
                                         {...cell.getCellProps()}
                                         key={l + '_cell'}
                                     >
-                                        <span>{new Date(cell.value).toLocaleDateString()}</span>
+                                        <div>{new Date(cell.value).toLocaleDateString()}</div>
 
                                     </td>
                                     )

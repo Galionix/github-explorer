@@ -3,8 +3,21 @@
 
 .panel {
 	// background: red;
+	position: sticky;
+	top:0px;
 	grid-column: panel;
 	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: min-content;
+	background: white;
+	z-index: 1;
+	@media screen and (max-width: 767px) {
+		flex-direction: row;
+		grid-column: 1/-1;
+		justify-content: space-evenly;
+	}
 }
 .close {
     @include btn;
@@ -36,22 +49,7 @@
 		.label {
 			grid-column: 1;
 		}
-		input,
-		select,
-		textarea {
-			margin: 2px;
-			border-radius: 5px;
-			border: 1px dashed $gray5;
-			&:hover {
-				border: 1px solid $dark;
-			}
-		}
-		textarea {
-			padding: 10px;
-		}
-		select {
-			cursor: pointer;
-		}
+
         button{
             @include btn;
             grid-column: 1/-1;
@@ -75,7 +73,9 @@
 }
 
 .name{
-    
+    @media screen and (max-width: 767px) {
+		display: none;
+	}
 }
 
 .new{
@@ -90,4 +90,12 @@ svg{
 
 
 }
+@media screen and (max-width: 767px) {
+	order: 0;
+}
+}
+.image{
+	@media screen and (max-width: 767px) {
+		order:2
+	}
 }
