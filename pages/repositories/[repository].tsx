@@ -215,7 +215,7 @@ const Repository = ({
 
                     />
                 </div>
-                <pre>{JSON.stringify(repoData, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(repoData, null, 2)}</pre> */}
 
                 <div
                     className={` ${s.htmlContent} `}
