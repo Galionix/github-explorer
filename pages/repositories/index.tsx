@@ -133,6 +133,8 @@ export default function Repositories({
         })
         setError(e.message)
         setLoading(false)
+        setPage(1)
+
     }
     const nextPage = (
         e: SyntheticEvent<HTMLButtonElement>
@@ -524,6 +526,8 @@ export default function Repositories({
                                     hasNextPage: false,
                                     hasPreviousPage: false,
                                 })
+                                setPage(1)
+
                                 // if (e.target.value === '')
                                 // {
                                 setOwnerFilter(e.target.value)
@@ -549,6 +553,8 @@ export default function Repositories({
                                     hasNextPage: false,
                                     hasPreviousPage: false,
                                 })
+                                setPage(1)
+
                                 setRepoNameSearch(e.target.value)
                             }}
                         />
@@ -576,6 +582,8 @@ export default function Repositories({
                                     hasNextPage: false,
                                     hasPreviousPage: false,
                                 })
+                                setPage(1)
+
                                 setPageSize(parseInt(e.target.value))
                                 // setPage(1)
                             }}
@@ -609,6 +617,7 @@ export default function Repositories({
                                     hasNextPage: false,
                                     hasPreviousPage: false,
                                 })
+                                setPage(1)
                                 // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
                                 setSortingField(e.target.value)
                             }}
@@ -650,6 +659,8 @@ export default function Repositories({
                                     hasNextPage: false,
                                     hasPreviousPage: false,
                                 })
+                                setPage(1)
+
                                 setOrderDirection(e.target.value)
                                 // setPage(1)
                                 // setPageSize(parseInt(e.target.value))
