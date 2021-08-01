@@ -2,6 +2,8 @@
 import { signIn, signOut, useSession } from 'next-auth/client';
 import { useUserStore } from 'utils/useUserStore';
 import shallow from 'zustand/shallow';
+import s from './button.module.scss'
+
 
 export const SignButton = () => {
 
@@ -49,6 +51,7 @@ export const SignButton = () => {
     return (
         <div>
             {!userStore ? <button
+                className={s.button}
                 disabled={sessionLoading}
                 // href={`/api/auth/signin`}
                 // className={styles.buttonPrimary}
@@ -83,7 +86,7 @@ export const SignButton = () => {
                 Sign in
             </button> : <button
                 // href={`/api/auth/signout`}
-                // className={styles.button}
+                    className={`${s.disabled} ${s.button}`}
                 onClick={e => {
                     setSessionLoading(true)
                     e.preventDefault()

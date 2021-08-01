@@ -1,0 +1,9 @@
+@import "@/styles/mixins";
+
+.layout{
+@include text-regular;
+@include main-layout;
+}
+.content{
+    grid-area: content;
+}

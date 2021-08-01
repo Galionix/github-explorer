@@ -17,7 +17,8 @@ import { setContext } from '@apollo/client/link/context';
 import { DefaultSession } from 'next-auth';
 import { useState } from 'react';
 import { Session } from '@/ts/interfaces';
-
+import '@/styles/index.scss'
+import { Navigation } from './../src/components/Nav/Navigation';
 
 
 
@@ -142,7 +143,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       {/* {client && <p>client got!</p>} */}
 
 
-
+      <Navigation />
       <Component {...pageProps} client={client} />
 
     </ApolloProvider>

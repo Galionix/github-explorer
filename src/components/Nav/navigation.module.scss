@@ -1,0 +1,27 @@
+@import '@/styles/mixins';
+@import '@/styles/vars';
+
+.nav {
+	background: $bg-main;
+	padding: 10px 20px;
+	display: flex;
+	justify-content: space-between;
+	ul {
+		display: flex;
+		gap: 25px;
+		align-items: center;
+		li {
+			@include text-regular;
+			a {
+				font-weight: bold;
+				color: $black;
+				text-decoration: none;
+				&:hover {
+					color: $green5;
+				}
+			}
+			display: block;
+			width: auto;
+		}
+	}
+}
