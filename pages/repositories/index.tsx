@@ -514,6 +514,12 @@ export default function Repositories({
                         value={ownerFilter}
                         placeholder='Owner'
                         onChange={e => {
+                            setPageInfo({
+                                endCursor: '',
+                                startCursor: '',
+                                hasNextPage: false,
+                                hasPreviousPage: false,
+                            })
                             // if (e.target.value === '')
                             // {
                             setOwnerFilter(e.target.value)
@@ -526,6 +532,12 @@ export default function Repositories({
                         placeholder='Repo name'
                         value={repoNameSearch}
                         onChange={e => {
+                            setPageInfo({
+                                endCursor: '',
+                                startCursor: '',
+                                hasNextPage: false,
+                                hasPreviousPage: false,
+                            })
                             setRepoNameSearch(e.target.value)
                         }}
                     />
@@ -540,8 +552,14 @@ export default function Repositories({
                         }
                         value={pageSize}
                         onChange={e => {
-                            // setPage(1)
+                            setPageInfo({
+                                endCursor: '',
+                                startCursor: '',
+                                hasNextPage: false,
+                                hasPreviousPage: false,
+                            })
                             setPageSize(parseInt(e.target.value))
+                            // setPage(1)
                         }}
                     >
                         <option value='5'>5</option>
@@ -560,6 +578,12 @@ export default function Repositories({
                             loading || repoNameSearch !== ''
                         }
                         onChange={e => {
+                            setPageInfo({
+                                endCursor: '',
+                                startCursor: '',
+                                hasNextPage: false,
+                                hasPreviousPage: false,
+                            })
                                         // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
                             setSortingField(e.target.value)
                         }}
@@ -588,6 +612,12 @@ export default function Repositories({
                             loading || repoNameSearch !== ''
                         }
                         onChange={e => {
+                            setPageInfo({
+                                endCursor: '',
+                                startCursor: '',
+                                hasNextPage: false,
+                                hasPreviousPage: false,
+                            })
                             setOrderDirection(e.target.value)
                             // setPage(1)
                             // setPageSize(parseInt(e.target.value))
