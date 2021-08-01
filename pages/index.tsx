@@ -127,8 +127,9 @@ export default function Home(data: any) {
                     key={i}
                   >
 
-                    <Link
-                      href={html_url}
+                      <Link
+                        prefetch
+                        href={`/repositories/${name}?owner=Galionix`}
                     >
                       <a >
 
