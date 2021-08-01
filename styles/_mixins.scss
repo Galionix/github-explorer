@@ -45,7 +45,9 @@
 	}
     &:disabled{
         background: $gray5;
+		cursor: not-allowed;
     }
+	
 }
 
 @mixin btn-disabled {
@@ -60,6 +62,9 @@
 	&:hover {
 		background: $green5;
 	}
+	    &:disabled{
+        cursor: not-allowed;
+    }
 }
 
 @mixin link {

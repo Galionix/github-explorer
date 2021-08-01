@@ -36,6 +36,9 @@
     }
     .control{
 	@include text-regular;
+  	    &:disabled{
+        cursor: not-allowed;
+    }
     max-width: 17vw;
  @media screen and (max-width: 1000px) {
      max-width: 100%;

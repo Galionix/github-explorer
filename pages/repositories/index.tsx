@@ -680,6 +680,7 @@ export default function Repositories({
 
                         >
                             {pageInfo.hasPreviousPage &&
+                                !(repoNameSearch !== '' && !globalSearch) &&
                                 <button
                                     className={` ${s.prev} `}
                                     disabled={!pageInfo.hasPreviousPage || loading}
@@ -688,7 +689,8 @@ export default function Repositories({
                                             prevPage, 100)
                                     }}
                                 >Previous page</button>}
-                            {pageInfo.hasNextPage && (
+                            {pageInfo.hasNextPage &&
+                                !(repoNameSearch !== '' && !globalSearch) && (
                                 <button
                                     className={` ${s.next} `}
                                     disabled={
