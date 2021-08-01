@@ -122,7 +122,7 @@ export default function Home(data: any) {
               {
 
 
-                  repos.items.map(({ name, html_url }, i) => (
+                  repos.items.map(({ name }, i) => (
                   <li
                     key={i}
                   >

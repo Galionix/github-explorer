@@ -6,9 +6,12 @@
 }
 .content {
 	padding: 0 20px;
-                a{
-	@include link;
-            }
+   
+					 a{
+					// font-size: 50px;
+		
+					@include link;
+            }		
 	grid-area: content;
 	display: flex;
 	flex-direction: column;
@@ -31,6 +34,15 @@
         margin: 0 auto;
         li{
             display: block;
+			a{
+	&:visited {
+		// color: red;
+		text-decoration: line-through !important;
+		// background-color:red;
+	}
+
+			}
+			    
 
         }
     }
