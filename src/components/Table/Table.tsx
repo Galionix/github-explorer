@@ -36,15 +36,13 @@ export const Table = ({ data, loading }: TableProps) => {
         }),
         shallow
     )
+    const headerDefinition = () => <span></span>
+
 
     const columns: Column<Node>[] = useMemo(
         () => [
             {
-                Header: () => (
-                    <span >
-
-                    </span>
-                ),
+                Header: headerDefinition,
                 id: 'someId',
                 columns: [
                     {
