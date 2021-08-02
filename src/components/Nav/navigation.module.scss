@@ -2,10 +2,16 @@
 @import '@/styles/vars';
 
 .nav {
-	background: $bg-main;
+	z-index: 1;
+	position: sticky;
+	top:0px;
+	background:
+	linear-gradient($bg-main 0%,transparent 100%)
+	;
 	padding: 10px 20px;
 	display: flex;
 	justify-content: space-between;
+	backdrop-filter: saturate(180%) blur(20px);
 	ul {
 		display: flex;
 		gap: 25px;
