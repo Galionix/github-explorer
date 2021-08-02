@@ -127,15 +127,14 @@ const Repository = ({
                     </a>
                 </Link>
 
-                <motion.div
-                    className={` ${s.external} `}
-                    style={{ cursor: 'pointer' }}
-                    {...buttonMotion}
-                >
+
                     <Link
                         href={`https://github.com/${repoData.owner.login}/${repoData.name}/`}
                     >
-                        <a target='_blank'>
+                    <a
+                        className={` ${s.external} `}
+
+                        target='_blank'>
                             {' '}
                             <svg
                                 xmlns='http://www.w3.org/2000/svg'
@@ -152,8 +151,7 @@ const Repository = ({
                                 />
                             </svg>
                         </a>
-                    </Link>
-                </motion.div>
+                </Link>
 
                 <h1 className={` ${s.login} `}>
                     {repoData.owner.login}
