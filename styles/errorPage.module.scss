@@ -5,6 +5,8 @@
 	@include text-regular;
 	@include main-layout;
 	.content {
+			grid-column: 1/-1;
+
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		// grid-template-rows: repeat(4,50px auto);

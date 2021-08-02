@@ -24,10 +24,10 @@
 		[footer] auto;
         @media screen and (max-width: 767px) {
             grid-template-columns:[content] 1fr;
-            	grid-template-rows:
+            grid-template-rows:
                 [panel] auto
-		[content] 1fr
-		[footer] auto;
+				[content] 1fr
+				[footer] auto;
         }
 }
 
