@@ -1,6 +1,7 @@
 import { StoreState } from '@/ts/interfaces'
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
+import { Node } from './../ts/interfaces'
 
 export const useUserStore = create<StoreState>(
 	persist(

@@ -1,6 +1,5 @@
 import {
     ApolloClient,
-
     NormalizedCacheObject,
 } from '@apollo/client'
 import shallow from 'zustand/shallow'
@@ -8,10 +7,10 @@ import {
     SyntheticEvent,
     useCallback,
     useEffect,
-    useMemo, useState
+    useMemo,
+    useState,
 } from 'react'
 import s from '@/styles/reposPage.module.scss'
-
 
 import {
     FIRST_PROJECTS,
@@ -19,20 +18,24 @@ import {
     NO_LOGIN_NEXT,
     NO_LOGIN_PREV,
     SEARCH_PREV,
-    SEARCH_NEXT
+    SEARCH_NEXT,
 } from '@/queries/reposQueries'
 import {
     NoLogin,
     RootObject,
     PageInfo,
-    Node, Error
+    Node,
+    Error,
 } from 'ts/interfaces'
 
-import { Table, UserPanel } from '@/components/index'
+import {
+    Table,
+    UserPanel,
+} from '@/components/index'
 import { useUserStore } from 'utils/useUserStore'
 import { debounce } from 'lodash'
-import { formatBytes } from 'utils/utils';
-import Head from 'next/head';
+import { formatBytes } from 'utils/utils'
+import Head from 'next/head'
 import { motion } from 'framer-motion'
 import { buttonMotion } from 'src/motionConfig'
 import { useRouter } from 'next/router'
@@ -42,34 +45,20 @@ const no_repos_message = 'No repos.'
 export default function Repositories({
     client,
 }: {
-    client: ApolloClient<NormalizedCacheObject>
+        client: ApolloClient<NormalizedCacheObject>
 }) {
     const router = useRouter()
     useEffect(() => {
-
-
-        if (router && !user)
-            router.replace('/401')
+        if (router && !user) router.replace('/401')
     }, [router])
-    // const [sortingField, setsortingField] = useState('STARGAZERS')
-    // const [orderDirection, setOrderDirection] = useState('ASC')
+
     const [loading, setLoading] = useState(true)
     const [pageInfo, setPageInfo] = useState({
         endCursor: '',
         startCursor: '',
         hasNextPage: false,
         hasPreviousPage: false,
-        // __typename: "PageInfo"
     })
-	// const [pageSize, setPageSize] = useState(5)
-	// const user =
-	//     useUserStore((state) => state.user);
-	// const pageSize =
-	//     useUserStore((state) => state.pageSize);
-	// const orderDirection =
-	//     useUserStore((state) => state.orderDirection);
-	// const sortingField =
-	//     useUserStore((state) => state.sortingField);
 
     const {
         user,
@@ -102,13 +91,13 @@ export default function Repositories({
 
     const globalSearch = ownerFilter === ''
 
-
     const [repos, setRepos] = useState<Node[]>([])
 
-    const [generalData, setGeneralData] = useState<any>({
-        totalCount: 0,
-        totalDiskUsage: 0
-    })
+    const [generalData, setGeneralData] =
+        useState<any>({
+            totalCount: 0,
+            totalDiskUsage: 0,
+        })
 
     const [page, setPage] = useState(1)
     const handleDownloadError = (e: Error) => {
@@ -120,14 +109,12 @@ export default function Repositories({
             hasPreviousPage: false,
         })
         setGeneralData({
-
             totalCount: 0,
-            totalDiskUsage: 0
+            totalDiskUsage: 0,
         })
         setError(e.message)
         setLoading(false)
         setPage(1)
-
     }
     const nextPage = (
         e: SyntheticEvent<HTMLButtonElement>
@@ -155,20 +142,17 @@ export default function Repositories({
                         handleDownloadError({
                             message: no_repos_message,
                         })
-                        // setError('No repos found')
                     }
                 })
-                .catch(handleDownloadError).finally(() => setLoading(false))
-        }
-        else {
+                .catch(handleDownloadError)
+                .finally(() => setLoading(false))
+        } else {
             client
                 .query({
                     query: NO_LOGIN_NEXT,
                     variables: {
-                        // login: ownerFilter,
                         pageSize,
-                        // orderDirection,
-                        // field: sortingField,
+
                         repoName: repoNameSearch,
                         after: pageInfo.endCursor,
                     },
@@ -176,7 +160,9 @@ export default function Repositories({
                 .then((res: NoLogin.RootObject) => {
                     setPage(page => page + 1)
                     setLoading(false)
-                    if (res.data.search.repositoryCount > 0) {
+                    if (
+                        res.data.search.repositoryCount > 0
+                    ) {
                         setNoLoginRepoData({
                             res,
                             repoNameSearch,
@@ -185,13 +171,15 @@ export default function Repositories({
                         handleDownloadError({
                             message: no_repos_message,
                         })
-                        // setError('No repos found')
                     }
                 })
-                .catch(handleDownloadError).finally(() => setLoading(false))
+                .catch(handleDownloadError)
+                .finally(() => setLoading(false))
         }
     }
-    const prevPage = (e: SyntheticEvent<HTMLButtonElement>) => {
+    const prevPage = (
+        e: SyntheticEvent<HTMLButtonElement>
+    ) => {
         setLoading(true)
         if (!globalSearch) {
             client
@@ -215,20 +203,17 @@ export default function Repositories({
                         handleDownloadError({
                             message: no_repos_message,
                         })
-                        // setError('No repos found')
                     }
                 })
-                .catch(handleDownloadError).finally(() => setLoading(false))
-        }
-        else {
+                .catch(handleDownloadError)
+                .finally(() => setLoading(false))
+        } else {
             client
                 .query({
                     query: NO_LOGIN_PREV,
                     variables: {
-                        // login: ownerFilter,
                         pageSize,
-                        // orderDirection,
-                        // field: sortingField,
+
                         repoName: repoNameSearch,
                         before: pageInfo.startCursor,
                     },
@@ -236,7 +221,9 @@ export default function Repositories({
                 .then((res: NoLogin.RootObject) => {
                     setPage(page => page - 1)
                     setLoading(false)
-                    if (res.data.search.repositoryCount > 0) {
+                    if (
+                        res.data.search.repositoryCount > 0
+                    ) {
                         setNoLoginRepoData({
                             res,
                             repoNameSearch,
@@ -245,26 +232,23 @@ export default function Repositories({
                         handleDownloadError({
                             message: no_repos_message,
                         })
-                        // setError('No repos found')
                     }
                 })
-                .catch(handleDownloadError).finally(() => setLoading(false))
-
+                .catch(handleDownloadError)
+                .finally(() => setLoading(false))
         }
-    }
-
-    const prepareData = (repo: Node) => {
-		// let modified = repo;
-		// modified.name += '_edited'
-
-        return repo
     }
 
     const setRepoData = ({
         res: {
             data: {
                 repositoryOwner: {
-                    repositories: { nodes, pageInfo, totalCount, totalDiskUsage },
+                    repositories: {
+                        nodes,
+                        pageInfo,
+                        totalCount,
+                        totalDiskUsage,
+                    },
                     repository,
                 },
             },
@@ -289,69 +273,61 @@ export default function Repositories({
         if (repoNameSearch !== '') {
             if (repository) {
                 setRepos([repository])
-                setGeneralData({ totalCount: 1, totalDiskUsage: repository.diskUsage })
-            }
-            else handleDownloadError({ message: 'no repo found' })
+                setGeneralData({
+                    totalCount: 1,
+                    totalDiskUsage: repository.diskUsage,
+                })
+            } else
+                handleDownloadError({
+                    message: 'no repo found',
+                })
         } else {
-            // nodes.map(console.log)
             setRepos(nodes)
-            setGeneralData({ totalCount, totalDiskUsage })
+            setGeneralData({
+                totalCount,
+                totalDiskUsage,
+            })
         }
 
         setError('')
         setPageInfo(pageInfo)
-
     }
 
     const setNoLoginRepoData = ({
         res: {
             data: {
-                search: { repositoryCount, edges, pageInfo },
+                search: {
+                    repositoryCount,
+                    edges,
+                    pageInfo,
+                },
             },
         },
         repoNameSearch,
     }: {
         res: NoLogin.RootObject
         repoNameSearch: string
-    }) => {
-        // if (repoNameSearch !== '') {
+        }) => {
         if (repositoryCount > 0) {
-			// edges.map(item => console.log(item.node))
             setGeneralData({
                 totalCount: repositoryCount,
-                totalDiskUsage: Infinity
+                totalDiskUsage: Infinity,
             })
             setPageInfo(pageInfo)
             setRepos(edges.map(item => item.node))
         } else {
-            handleDownloadError({ message: 'found 0 repos' })
-            // setRepos([])
-            // setError('no repo found')
-            // setPageInfo({
-            //     endCursor: '',
-            //     startCursor: '',
-            //     hasNextPage: false,
-            //     hasPreviousPage: false,
-            // })
+            handleDownloadError({
+                message: 'found 0 repos',
+            })
         }
-		// }
-		// else
-		//     setRepos(nodes)
-
-        // setError('')
-
     }
 
-    // const data =  repos 
     const [error, setError] = useState('')
     useEffect(() => {
-        // debounce(() => {
         setLoading(true)
 
         if (client && user) {
             if (!globalSearch) {
-                // console.log('owner search')
-
                 download({
                     client,
 
@@ -362,20 +338,15 @@ export default function Repositories({
                     repoNameSearch,
                 })
             } else {
-                // console.log('global search')
-
                 downloadRepo({
                     client,
-                    // ownerFilter,
+
                     pageSize,
-					// orderDirection,
-					// sortingField,
+
                     repoNameSearch,
                 })
             }
         }
-		// }, 2000
-		// )
     }, [
         client,
         ownerFilter,
@@ -396,13 +367,6 @@ export default function Repositories({
                 sortingField,
                 repoNameSearch,
             }) => {
-				// console.log(
-				//     login,
-				//     pageSize,
-				//     orderDirection,
-				//     sortingField
-
-				// )
                 client
                     .query({
                         query: FIRST_PROJECTS,
@@ -415,7 +379,6 @@ export default function Repositories({
                         },
                     })
                     .then((res: RootObject) => {
-                        // console.log("%c 👩‍👦‍👦: res ", "font-size:16px;background-color:#2e6946;color:white;", res)
                         setLoading(false)
                         if (res.data.repositoryOwner) {
                             setRepoData({ res, repoNameSearch })
@@ -443,15 +406,12 @@ export default function Repositories({
                     .query({
                         query: NO_LOGIN,
                         variables: {
-                            // login: ownerFilter,
                             pageSize,
-							// orderDirection,
-							// field: sortingField,
+
                             repoName: repoNameSearch,
                         },
                     })
                     .then((res: NoLogin.RootObject) => {
-                        // console.log("%c 📵: res ", "font-size:16px;background-color:#77e2bf;color:black;", res)
                         setLoading(false)
                         if (
                             res.data.search.repositoryCount > 0
@@ -472,40 +432,29 @@ export default function Repositories({
         ),
         []
     )
-    const data = useMemo(() => repos, [repos])
+    // const data = useMemo(() => repos, [repos])
 
     return (
-        <div
-            className={s.layout}
-        >
-
+        <div className={s.layout}>
             <Head>
                 <title>Github explorer | Browse!</title>
-                <meta name="description"
-                    content="App for browsing github repos" />
-                <link rel="icon"
-                    href="/favicon.ico" />
+                <meta
+                    name='description'
+                    content='App for browsing github repos'
+                />
+                <link rel='icon' href='/favicon.ico' />
             </Head>
             <UserPanel />
 
-            <div
-                className={` ${s.content} `}
+            <div className={` ${s.content} `}>
+                {error && (
+                    <p className={` ${s.error} `}>
+                        {error}
+                    </p>
+                )}
 
-            >
-
-                {error && <p
-                    className={` ${s.error} `}
-
-                >{error}</p>}
-
-                <div
-                    className={` ${s.controls} `}
-
-                >
-                    <div
-                        className={` ${s.controlGroup} `}
-
-                    >
+                <div className={` ${s.controls} `}>
+                    <div className={` ${s.controlGroup} `}>
                         <p>Owner Search</p>
                         <input
                             className={` ${s.control} `}
@@ -521,17 +470,11 @@ export default function Repositories({
                                 })
                                 setPage(1)
 
-                                // if (e.target.value === '')
-                                // {
                                 setOwnerFilter(e.target.value)
-                                // }
                             }}
                         />
                     </div>
-                    <div
-                        className={` ${s.controlGroup} `}
-
-                    >
+                    <div className={` ${s.controlGroup} `}>
                         <p>Repo search/filter</p>
 
                         <input
@@ -552,10 +495,7 @@ export default function Repositories({
                             }}
                         />
                     </div>
-                    <div
-                        className={` ${s.controlGroup} `}
-
-                    >
+                    <div className={` ${s.controlGroup} `}>
                         <p>Page size</p>
 
                         <select
@@ -565,7 +505,8 @@ export default function Repositories({
                             id=''
                             disabled={
                                 loading ||
-                                (repoNameSearch !== '' && !globalSearch)
+                                (repoNameSearch !== '' &&
+                                    !globalSearch)
                             }
                             value={pageSize}
                             onChange={e => {
@@ -577,8 +518,9 @@ export default function Repositories({
                                 })
                                 setPage(1)
 
-                                setPageSize(parseInt(e.target.value))
-                                // setPage(1)
+                                setPageSize(
+                                    parseInt(e.target.value)
+                                )
                             }}
                         >
                             <option value='5'>5</option>
@@ -588,10 +530,7 @@ export default function Repositories({
                             <option value='100'>100</option>
                         </select>
                     </div>
-                    <div
-                        className={` ${s.controlGroup} `}
-
-                    >
+                    <div className={` ${s.controlGroup} `}>
                         <p>Sort by</p>
 
                         <select
@@ -611,7 +550,6 @@ export default function Repositories({
                                     hasPreviousPage: false,
                                 })
                                 setPage(1)
-                                // console.log("%c 🔈: e ", "font-size:16px;background-color:#355b2a;color:white;", e)
                                 setSortingField(e.target.value)
                             }}
                         >
@@ -630,10 +568,7 @@ export default function Repositories({
                             <option value='NAME'>NAME</option>
                         </select>
                     </div>
-                    <div
-                        className={` ${s.controlGroup} `}
-
-                    >
+                    <div className={` ${s.controlGroup} `}>
                         <p>Direction</p>
 
                         <select
@@ -655,8 +590,6 @@ export default function Repositories({
                                 setPage(1)
 
                                 setOrderDirection(e.target.value)
-                                // setPage(1)
-                                // setPageSize(parseInt(e.target.value))
                             }}
                         >
                             <option value='DESC'>DESC</option>
@@ -666,61 +599,72 @@ export default function Repositories({
                 </div>
                 {repos.length > 0 && user && (
                     <>
-                        <Table data={repos} loading={loading} setRepos={setRepos} />
-                        {/* <pre>{JSON.stringify(pageInfo, null, 2)}</pre> */}
-                        <div
-                            className={` ${s.buttonGroup} `}
 
-                        >
+                        <Table
+                            data={repos}
+                            loading={loading}
+                            setRepos={setRepos}
+                        />
+                        <div className={` ${s.buttonGroup} `}>
                             {pageInfo.hasPreviousPage &&
-                                !(repoNameSearch !== '' && !globalSearch) &&
-                                <motion.button
-                                    {...buttonMotion}
-                                    className={` ${s.prev} `}
-                                    disabled={!pageInfo.hasPreviousPage || loading}
-                                    onClick={() => {
-                                        setTimeout(
-                                            prevPage, 100)
-                                    }}
-                                >Previous page</motion.button>}
-                            {pageInfo.hasNextPage &&
-                                !(repoNameSearch !== '' && !globalSearch) && (
-                                <motion.button
-                                    {...buttonMotion}
-                                    className={` ${s.next} `}
+                                !(
+                                    repoNameSearch !== '' &&
+                                    !globalSearch
+                                ) && (
+                                    <motion.button
+                                        {...buttonMotion}
+                                        className={` ${s.prev} `}
                                     disabled={
-                                        !pageInfo.hasNextPage || loading
+                                        !pageInfo.hasPreviousPage ||
+                                        loading
                                     }
-                                    onClick={nextPage}
-                                >
-                                    Next page
-                                </motion.button>
+                                    onClick={() => {
+                                        setTimeout(prevPage, 100)
+                                    }}
+                                    >
+                                        Previous page
+                                    </motion.button>
+                                )}
+                            {pageInfo.hasNextPage &&
+                                !(
+                                    repoNameSearch !== '' &&
+                                    !globalSearch
+                                ) && (
+                                    <motion.button
+                                        {...buttonMotion}
+                                        className={` ${s.next} `}
+                                        disabled={
+                                            !pageInfo.hasNextPage ||
+                                            loading
+                                        }
+                                        onClick={nextPage}
+                                    >
+                                        Next page
+                                    </motion.button>
+                                )}
+                        </div>
+                        <div className={` ${s.pagingInfo} `}>
+                            {' '}
+                            <p>Current page : {page}</p>
+                            <p>
+                                Total pages :{' '}
+                                {Math.ceil(
+                                    generalData.totalCount /
+                                    pageSize
+                                )}
+                            </p>
+                        </div>
+                        <div className={` ${s.total} `}>
+                            <p>{`Total count: ${generalData.totalCount}`}</p>
+                            {globalSearch || (
+                                <p>{`Total disk usage: ${formatBytes(
+                                    generalData.totalDiskUsage
+                                )}`}</p>
                             )}
                         </div>
-                        <div
-                            className={` ${s.pagingInfo} `}
-
-                        >   <p>Current page : {page}</p>
-                            <p>Total pages : {(Math.ceil(generalData.totalCount / pageSize))}</p>
-                        </div>
-                        <div
-                            className={` ${s.total} `}
-
-                        >
-                            <p>{`Total count: ${generalData.totalCount}`}</p>
-                            {
-                                globalSearch || <p>{`Total disk usage: ${formatBytes(generalData.totalDiskUsage)}`}</p>
-                            }
-                        </div>
-
                     </>
                 )}
-
             </div>
-
-            {/* <pre>
-                {JSON.stringify(pageInfo, null, 2)}
-            </pre> */}
         </div>
     )
 }

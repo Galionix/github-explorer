@@ -1,7 +1,9 @@
-import { getSession } from 'next-auth/client'
-import { Provider as AuthProvider } from 'next-auth/client'
+import {
+  Provider as AuthProvider,
+  getSession,
+} from 'next-auth/client'
 import type { AppProps } from 'next/app'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUserStore } from 'utils/useUserStore'
 import {
   ApolloProvider,
@@ -12,23 +14,21 @@ import {
 } from '@apollo/client'
 
 import { setContext } from '@apollo/client/link/context'
-import { useState } from 'react'
 import '@/styles/index.scss'
-import { Navigation, Footer } from '@/components/index'
+import {
+  Navigation,
+  Footer,
+} from '@/components/index'
 
 function MyApp({
   Component,
   pageProps,
-  router,
 }: AppProps) {
   const userStore = useUserStore(
     state => state.user
   )
   const setUser = useUserStore(
     state => state.setUser
-  )
-  const setOwnerFilter = useUserStore(
-    state => state.setOwnerFilter
   )
 
   const [client, setClient] = useState<

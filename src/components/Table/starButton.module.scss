@@ -1,38 +1,27 @@
 @import '@/styles/vars';
 @import '@/styles/mixins';
 
-.starButton{
-    min-width: 70px;
-    border: none;
-    cursor: pointer;
-    background: transparent;
-    position: relative;
-    color: $gray;
-    span{
-        // min-width: 35px;
-        background: $green5;
-        // width: 100%;
-        padding: 0px 5px;
-        position: absolute;
-        top:0;
-        left:60%;
-        // margin-top: 50px;
-        // transform: translateY(100%)
-    //         top: 50%;
-    // transform: translateY(-50%);
-    // left: 0;
-    // transform: translateX(-50%);
-    // top: 50%;
-    color:white;
-    font-weight: bold;
-    @include text-regular;
-    border-radius:50%;
-    // inset: 90% 90%;
-    // margin: auto;
+.starButton {
+	min-width: 70px;
+	border: none;
+	cursor: pointer;
+	background: transparent;
+	position: relative;
+	color: $gray;
+	span {
+		background: $green5;
+		padding: 0px 5px;
+		position: absolute;
+		top: 0;
+		left: 60%;
 
-    }
-    @media screen and (max-width: 767px) {
-          min-width: auto;
-          width: 10vw;
-    }
+		color: white;
+		font-weight: bold;
+		@include text-regular;
+		border-radius: 50%;
+	}
+	@media screen and (max-width: 767px) {
+		min-width: auto;
+		width: 10vw;
+	}
 }

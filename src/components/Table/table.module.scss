@@ -29,7 +29,7 @@
 	}
 }
 .table {
-	tbody{
+	tbody {
 		overflow-x: hidden;
 	}
 	th {
@@ -37,7 +37,6 @@
 			font-size: clamp(10px, 2vw, 30px);
 		}
 	}
-	// margin: 0;
 	width: 100%;
 	a {
 		@include link;
@@ -46,7 +45,6 @@
 	border: none;
 	border-collapse: collapse;
 	td {
-		//  display: grid;
 		border-left: 1px dashed $gray5;
 		& > * {
 			padding: 0 10px;
@@ -56,12 +54,7 @@
 			}
 			margin: 0 auto;
 
-			// width: min-content;
 			text-align: center;
-			// place-self: center;
-			//    width: min-content;
-			//    margin: 0 auto;
-			// background-color:red;
 		}
 	}
 	td:first-child {

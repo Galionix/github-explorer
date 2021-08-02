@@ -237,35 +237,7 @@ export const NO_LOGIN_PREV = gql`
 		}
 	}
 `
-// export const PREV_PROJECTS = {
-// 	query: gql`
-//             query Query {
-//                         user: user(login: $user.login) {
-//                             repositories(last: $pageSize,before: $startCursor  ) {
-//      pageInfo {
-//           endCursor
-//         startCursor
-//         hasNextPage
-//         hasPreviousPage
-//       }
-//       totalCount
-//       totalDiskUsage
-//       nodes {
-//         name
-//         updatedAt
-//         createdAt
-//         url
-//         diskUsage
-//         stargazerCount
-//         id
-//       }
-//                             }
-//                         }
 
-// 					}
-
-// 				`,
-// }
 export const ADD_STAR = gql`
 	mutation AddStar($starrableId: String) {
 		__typename

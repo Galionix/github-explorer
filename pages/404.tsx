@@ -9,7 +9,6 @@ export default function Custom404() {
         <div className={` ${s.layout} `}>
             <div className={` ${s.content} `}>
                 <h1>
-
                     {`Seems like `}
                     <span>{router.asPath}</span>
                     {` is not a valid path`}
@@ -18,7 +17,6 @@ export default function Custom404() {
                     404 (Not found)
                 </div>
                 <div className={s.message}>
-
                     <Link href='/'>
                         <a>
                             <p>Go home</p>
