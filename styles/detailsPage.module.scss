@@ -93,6 +93,10 @@ max-width: 50px;
 
 }
 .htmlContent{
+    * {
+
+        max-width: 100%;
+    }
     word-break: break-word;
     @media screen and (max-width: 767px) {
         padding: 0 20px;
