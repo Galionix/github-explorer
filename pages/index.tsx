@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { UserPanel } from './../src/components/UserPanel/UserPanel';
 import s from '@/styles/homePage.module.scss';
 import { AnimatePresence, motion } from 'framer-motion'
-import { transition } from '@/components/motionConfig';
+import { transition } from 'src/motionConfig';
 
 const exit = {
 

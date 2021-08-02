@@ -18,10 +18,10 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
-import { buttonMotion } from '@/components/motionConfig';
+import { buttonMotion } from 'src/motionConfig';
 import { useUserStore } from './../../utils/useUserStore';
 import shallow from 'zustand/shallow';
-import { transition } from '@/components/motionConfig';
+import { transition } from 'src/motionConfig';
 
 
 TimeAgo.addDefaultLocale(en)
@@ -49,7 +49,7 @@ const Repository = ({
 
 
         if (router && !user)
-            router.replace('/')
+            router.replace('/401')
     }, [router])
     const [repoData, setRepoData] = useState({
         diskUsage: 0,

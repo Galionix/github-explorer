@@ -5,7 +5,7 @@ import shallow from 'zustand/shallow';
 import s from './button.module.scss'
 import { useRouter } from 'next/router'
 import { motion } from 'framer-motion';
-import { buttonMotion } from '../motionConfig';
+import { buttonMotion } from '../../motionConfig';
 
 
 export const SignButton = () => {

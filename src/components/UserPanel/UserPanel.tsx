@@ -12,7 +12,7 @@ import { useRouter } from 'next/router'
 import s from './panel.module.scss'
 import Modal from 'react-modal';
 import { motion } from 'framer-motion';
-import { buttonMotion } from '../motionConfig';
+import { buttonMotion } from '../../motionConfig';
 
 
 

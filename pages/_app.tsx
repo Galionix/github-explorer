@@ -1,190 +1,106 @@
-import { getSession, useSession } from 'next-auth/client';
-// import '../styles/globals.css'
+import { getSession } from 'next-auth/client'
 import { Provider as AuthProvider } from 'next-auth/client'
 import type { AppProps } from 'next/app'
-import { useEffect } from 'react';
-import { useUserStore } from './../utils/useUserStore';
+import { useEffect } from 'react'
+import { useUserStore } from 'utils/useUserStore'
 import {
   ApolloProvider,
   ApolloClient,
   InMemoryCache,
   createHttpLink,
   NormalizedCacheObject,
-  ApolloConsumer
 } from '@apollo/client'
 
-import { setContext } from '@apollo/client/link/context';
-import { DefaultSession } from 'next-auth';
-import { useState } from 'react';
-import { Session } from '@/ts/interfaces';
+import { setContext } from '@apollo/client/link/context'
+import { useState } from 'react'
 import '@/styles/index.scss'
-import { Navigation } from './../src/components/Nav/Navigation';
-import { Footer } from './../src/components/Footer/Footer';
-import { motion, AnimateSharedLayout, AnimatePresence } from 'framer-motion';
-import { transition } from '@/components/motionConfig';
+import { Navigation, Footer } from '@/components/index'
 
-const variants = {
-  hidden: {
-    opacity: 0,
-    // x: -200,
-  },
-  enter: {
-    opacity: 1,
-    // x: 0,
-  },
-  exit: {
-    opacity: 0,
-    // x: 200,
-  },
-}
+function MyApp({
+  Component,
+  pageProps,
+  router,
+}: AppProps) {
+  const userStore = useUserStore(
+    state => state.user
+  )
+  const setUser = useUserStore(
+    state => state.setUser
+  )
+  const setOwnerFilter = useUserStore(
+    state => state.setOwnerFilter
+  )
 
-function MyApp({ Component, pageProps, router }: AppProps) {
-
-
-  // type AuthenticatedUser = {
-  //   // user: {
-  //   login: string
-  //   name?: string
-  //   picture?: string
-  //   accessToken?: string
-  //   // }
-  // }
-
-
-  const userStore =
-    useUserStore((state) => state.user);
-  const setUser =
-    useUserStore((state) => state.setUser);
-  const setOwnerFilter =
-    useUserStore((state) => state.setOwnerFilter);
-
-  // if (session) 
-
-  // useEffect(() => {
-
-    // if (!loading)
-    //   if (session?.user)
-  //   setOwnerFilter(session?.user?.login)
-  // }, [session?.user?.login])
-
-
-  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | any>(null)
-
+  const [client, setClient] = useState<
+    ApolloClient<NormalizedCacheObject> | any
+  >(null)
 
   useEffect(() => {
-
-
-
-
-    // const [session, loading]
-    //   : [session: Session | null, loading: boolean | null] = useSession()
-    // console.log("%c 🕵️‍♂️: MyApp -> session ",
-    //   "font-size:16px;background-color:#871f01;color:white;",
-    //   session)
-
     if (userStore) {
-
-
-
-
       const httpLink = createHttpLink({
         uri: 'https://api.github.com/graphql',
-      });
+      })
 
-      const authLink = setContext((_, { headers }) => {
-        // const user = session?.user!
-        // if (!user) return
-        // get the authentication token from local storage if it exists
-        const token = userStore.accessToken;
-        // console.log("%c ⬇️: authLink -> token ",
-        //   "font-size:16px;background-color:#cc9bd1;color:white;", token)
-        // return the headers to the context so httpLink can read them
-        return {
-          headers: {
-            ...headers,
-            authorization: token ? `Bearer ${token}` : "",
+      const authLink = setContext(
+        (_, { headers }) => {
+          const token = userStore.accessToken
+          return {
+            headers: {
+              ...headers,
+              authorization: token
+                ? `Bearer ${token}`
+                : '',
+            },
           }
         }
-      });
-
-
+      )
 
       setClient(
         new ApolloClient({
           link: authLink.concat(httpLink),
-          cache: new InMemoryCache()
+          cache: new InMemoryCache(),
         })
-
       )
     }
   }, [userStore])
 
   useEffect(() => {
-    (async () => {
+    ; (async () => {
       const session: any = await getSession()
       setUser(session?.user)
-
-      // console.log("%c 🇵🇱: MyApp -> session ",
-      //   "font-size:16px;background-color:#76ce59;color:white;", session)
     })()
-    // console.log("%c 🥛: client ", "font-size:16px;background-color:#2baa13;color:white;", client)
-
   }, [])
 
-
-
-  return <AuthProvider
-    // Provider options are not required but can be useful in situations where
-    // you have a short session maxAge time. Shown here with default values.
-    options={{
-      // Client Max Age controls how often the useSession in the client should
-      // contact the server to sync the session state. Value in seconds.
-      // e.g.
-      // * 0  - Disabled (always use cache value)
-      // * 60 - Sync session state with server if it's older than 60 seconds
-      clientMaxAge: 0,
-      // Keep Alive tells windows / tabs that are signed in to keep sending
-      // a keep alive request (which extends the current session expiry) to
-      // prevent sessions in open windows from expiring. Value in seconds.
-      //
-      // Note: If a session has expired when keep alive is triggered, all open
-      // windows / tabs will be updated to reflect the user is signed out.
-      keepAlive: 0
-    }}
-    session={pageProps.session} >
-    <ApolloProvider
-      client={client || {}}
+  return (
+    <AuthProvider
+      options={{
+        // Client Max Age controls how often the useSession in the client should
+        // contact the server to sync the session state. Value in seconds.
+        // e.g.
+        // * 0  - Disabled (always use cache value)
+        // * 60 - Sync session state with server if it's older than 60 seconds
+        clientMaxAge: 0,
+				// Keep Alive tells windows / tabs that are signed in to keep sending
+				// a keep alive request (which extends the current session expiry) to
+				// prevent sessions in open windows from expiring. Value in seconds.
+				//
+				// Note: If a session has expired when keep alive is triggered, all open
+				// windows / tabs will be updated to reflect the user is signed out.
+        keepAlive: 0,
+      }}
+      session={pageProps.session}
     >
+      <ApolloProvider client={client || {}}>
+        <Navigation />
 
-      {/* {client && <p>client got!</p>} */}
+        <Component
+          {...pageProps}
+          client={client}
+        />
 
-      {/* <AnimateSharedLayout
-        type='crossfade'
-
-      > */}
-      <Navigation />
-      {/* <AnimatePresence
-        exitBeforeEnter
-        // initial={false}
-      > */}
-      {/* <motion.div
-          key={router.route}
-          // initial={{ scaleX: 1 }}
-          // animate={{ scaleX: 0 }}
-          // exit={{ scaleX: 0 }}
-          // transition={{ duration: 1, ease: "easeInOut" }}
-          variants={variants} // Pass the variant object into Framer Motion 
-          initial="hidden" // Set the initial state to variants.hidden
-          animate="enter" // Animated state to variants.enter
-          exit="exit" // Exit state (used later) to variants.exit
-          transition={transition} // Set the transition to linear
-        > */}
-          <Component {...pageProps} client={client} />
-      {/* </motion.div> */}
-      {/* </AnimatePresence> */}
-      <Footer />
-      {/* </AnimateSharedLayout> */}
-    </ApolloProvider>
-  </AuthProvider>
+        <Footer />
+      </ApolloProvider>
+    </AuthProvider>
+  )
 }
 export default MyApp

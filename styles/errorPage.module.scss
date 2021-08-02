@@ -1,0 +1,53 @@
+@import '@/styles/mixins';
+@import '@/styles/vars';
+
+.layout {
+	@include text-regular;
+	@include main-layout;
+	.content {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		// grid-template-rows: repeat(4,50px auto);
+		row-gap: 50px;
+		h1 {
+			grid-column: 1/-1;
+			// justify-self: center;
+			text-align: center;
+			grid-row: 2;
+		}
+		span {
+			color: $green;
+			font-weight: bold;
+		}
+		a {
+			@include link;
+
+			svg {
+				max-width: 70px;
+			}
+		}
+		.message {
+			// justify-self: center;
+			text-align: center;
+			width: 100%;
+			a {
+				// width: max-content;
+		 
+				justify-content: center;
+				gap: 20px;
+				align-items: center;
+				display: flex;
+				flex-flow: row nowrap;
+			}
+			grid-column: 1/-1;
+
+			grid-row: 4;
+		}
+		.status {
+			grid-column: 1/-1;
+
+			grid-row: 3;
+			text-align: center;
+		}
+	}
+}

@@ -1,57 +1,41 @@
-// import { useSession } from 'next-auth/client';
 import {
     ApolloClient,
-    // InMemoryCache,
-    gql,
-    // createHttpLink,
-    // useMutation,
+
     NormalizedCacheObject,
-	// useQuery
 } from '@apollo/client'
 import shallow from 'zustand/shallow'
 import {
-    MouseEventHandler,
     SyntheticEvent,
     useCallback,
     useEffect,
-    useMemo,
+    useMemo, useState
 } from 'react'
 import s from '@/styles/reposPage.module.scss'
-import { useState } from 'react'
-// import Header from '@/components/Header/Header';
 
-// import { throttle } from 'lodash'
 
-// import { formatBytes } from 'utils/utils';
 import {
     FIRST_PROJECTS,
     NO_LOGIN,
     NO_LOGIN_NEXT,
     NO_LOGIN_PREV,
     SEARCH_PREV,
-	// PREV_PROJECTS
-} from './../../utils/queries/reposQueries'
+    SEARCH_NEXT
+} from '@/queries/reposQueries'
 import {
     NoLogin,
-    Owner,
     RootObject,
-    Session,
+    PageInfo,
+    Node, Error
 } from 'ts/interfaces'
 
-import { Table } from '../../src/components/Table/Table'
-import { SignButton } from '@/components/SignButton/SignButton'
+import { Table, UserPanel } from '@/components/index'
 import { useUserStore } from 'utils/useUserStore'
-import { PageInfo } from 'ts/interfaces'
-import { Node } from './../../ts/interfaces'
 import { debounce } from 'lodash'
-import { Error } from './../../ts/interfaces'
-import { SEARCH_NEXT } from './../../utils/queries/reposQueries'
-import { formatBytes } from './../../utils/utils';
-import { UserPanel } from './../../src/components/UserPanel/UserPanel';
-import Link from 'next/link';
+import { formatBytes } from 'utils/utils';
 import Head from 'next/head';
 import { motion } from 'framer-motion'
-import { buttonMotion } from '@/components/motionConfig'
+import { buttonMotion } from 'src/motionConfig'
+import { useRouter } from 'next/router'
 
 const no_repos_message = 'No repos.'
 
@@ -60,6 +44,13 @@ export default function Repositories({
 }: {
     client: ApolloClient<NormalizedCacheObject>
 }) {
+    const router = useRouter()
+    useEffect(() => {
+
+
+        if (router && !user)
+            router.replace('/401')
+    }, [router])
     // const [sortingField, setsortingField] = useState('STARGAZERS')
     // const [orderDirection, setOrderDirection] = useState('ASC')
     const [loading, setLoading] = useState(true)
